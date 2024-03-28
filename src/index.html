@@ -9,17 +9,35 @@
     <link rel="stylesheet" href="output.css">
   </head>
   <body>
-	<script src="index.js"></script>
-    <div x-data="{cards: null}">
-        <input type="file">
-        <ul>
-            <template x-for="card in cards">
-                <li>
+	<script src="index.js" type="module"></script>
 
-                </li>
-            </template>
-        </ul>
-    </div>
-
+  <div x-data="util">
+  <div x-data="{qa: new Map(), cards: []}">
+      <input type="file" accept=".csv" @change="({target})=>{
+          ReadCsv(target.files[0],(result)=>{
+            cards = result
+            console.log(cards)
+          })
+      }">
+      <ul x-show="cards">
+          <template x-for="card in cards">
+              <li x-data="{selected: null}" class="w-3">
+                <div x-text="'card: ' + card.question"></div>
+                <div >
+                  <template x-for="answer in Shuffle([...card.incorrect_answers, card.answer])">
+                    <div x-text="answer" :class="()=>{
+                      if(selected){
+                        return selected==answer ? 'bg-green-600' : 'bg-red-600'
+                      }
+                    }" @click="()=>{
+                      selected = selected ? selected : answer
+                    }"></div>
+                  </template>
+                </div>
+              </li>
+          </template>
+      </ul>
+  </div>
+</div>
   </body>
 </html>
