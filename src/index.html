@@ -16,7 +16,15 @@
     <script src="index.js" type="module"></script>
 
     <div x-data="util">
-      <div x-data="{qa: new Map(), cards: [], randomize:false, answers_correct:new Set(), answers_incorrect:new Set()}">
+      <div x-data="{qa: new Map(), cards: [], randomize:false, answers_correct:new Set(), answers_incorrect:new Set()}"
+          x-init="()=>{
+            cards = localStorage.getItem('cards') ? JSON.parse(localStorage.getItem('cards')) : cards
+            answers_correct = localStorage.getItem('answers_correct') ? new Set(JSON.parse(localStorage.getItem('answers_correct'))) : answers_correct
+            answers_incorrect = localStorage.getItem('answers_incorrect') ? new Set(JSON.parse(localStorage.getItem('answers_incorrect'))) : answers_incorrect
+            console.log('loading')
+            console.log(cards,answers_correct,answers_incorrect)
+          }
+          ">
         <div class="fixed top-1 left-2 space-y-2">
         <input
           type="file"
@@ -39,13 +47,12 @@
         answers_correct.clear()
         answers_incorrect.clear()
 
-        //Erase all cards then reload
-        let tmp_cards = [...cards]
-        setTimeout(()=>{
-          console.log(tmp_cards)
-          cards=tmp_cards}, 50)
-        cards=[]
+        // Reset the cards
+        for(let i =0; i < cards.length; i++){
+          cards[i].selected_answer = null
+        }
 
+        localStorage.removeItem('cards')
         }"
         >
           <span class="material-symbols-outlined text-white"> shuffle </span>
@@ -56,7 +63,6 @@
         <div x-show="cards" class="flex flex-row flex-wrap w-1/2 mx-auto space-y-5 mb-5">
           <template x-for="card in cards">
             <div
-              x-data="{selected: null}"
               class=" p-5 rounded-lg border-coolGray-600 border-2 bg-slate-50 min-w-full"
             >
               <div class="flex flex-row justify-center mb-5">
@@ -70,21 +76,28 @@
                     key="index"
                   >
                     <div class="basis-1/2 min-w-1/2 p-1" @click="()=>{
-                      selected = selected ? selected : answer
+                      card.selected_answer = card.selected_answer ? card.selected_answer : answer
                       if(answer === card.answer && !answers_incorrect.has(card) ){
                         answers_correct.add(card)
                       }else{
                         answers_incorrect.add(card)
                       }
+                      console.log('CARDS')
+                      console.log(JSON.parse(JSON.stringify(cards)))
+                      console.log(JSON.stringify(answers_correct))
+                      console.log(answers_incorrect)
+                      localStorage.setItem('cards', JSON.stringify(cards)) 
+                      localStorage.setItem('answers_incorrect', JSON.stringify(Array.from(answers_incorrect)))
+                      localStorage.setItem('answers_correct', JSON.stringify(Array.from(answers_correct)))
                     }">
                       <div
                         x-text="answer"
                         class="text-center rounded-lg text-lg"
                         :class="()=>{
-                      if(selected){
+                      if(card.selected_answer){
                         let str = card.answer===answer ? 'bg-green-600' : 'bg-red-600'
-                        console.log('selected', selected, card.answer)
-                        str += answer === selected ? ' border-black border-4' : ''
+                        <!-- console.log('selected', selected, card.answer) -->
+                        str += answer === card.selected_answer ? ' border-black border-4' : ''
                         return str
                       }
                     }"

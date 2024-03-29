@@ -7,7 +7,7 @@ Alpine.data(
     "util", ()=>({
         CreateCards: QuizCard.CreateCards,
         ReadCsv: QuizCard.ReadCsv,
-        Shuffle: Shuffle
+        Shuffle: Shuffle,
     })
 )
 

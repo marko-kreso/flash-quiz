@@ -4,6 +4,7 @@ import Papa from 'papaparse';
  * @property {string} question
  * @property {string} answer
  * @property {Array<string>} incorrect_answers
+ * @property {string?} selected_answer
  */
 
 /**
@@ -75,7 +76,8 @@ export default{
             question_answers.forEach((question_answer)=>{
                 let card = {
                     question: question,
-                    answer: question_answer
+                    answer: question_answer,
+                    selected_answer: null
                 }
 
                 if(question_answer === "true"){
