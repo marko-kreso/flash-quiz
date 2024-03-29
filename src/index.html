@@ -15,6 +15,7 @@
   <body class="bg-blue-400">
     <script src="index.js" type="module"></script>
 
+
     <div x-data="util">
       <div x-data="{qa: new Map(), cards: [], answers_correct:new Set(), answers_incorrect:new Set()}"
           x-init="()=>{
@@ -25,9 +26,15 @@
             console.log(cards,answers_correct,answers_incorrect)
           }
           ">
-        <div class="fixed top-1 left-2 space-y-2">
+        <div class="fixed top-1 left-2 space-y-5">
+        <label for="file" class="has-tooltip block  hover:cursor-pointer">
+          <span class='tooltip'>Upload CSV</span>
+          <span class="material-symbols-outlined from-pink-400 to-purple-500 text-white bg-gradient-to-r p-2  rounded-full" style="font-size: 2.25rem;">upload_file</span> 
+        </label>
         <input
           type="file"
+          id="file"
+          class="hidden"
           accept=".csv"
           @change="({target})=>{
           cards=[]
@@ -39,9 +46,8 @@
           })
       }"
         />
-        <br>
         <button
-        class="bg-slate-700 p-3 inline-block rounded-full"
+        class="block rounded-full has-tooltip"
           @click="()=>{
         Shuffle(cards)
         answers_correct.clear()
@@ -57,7 +63,9 @@
         localStorage.removeItem('answers_incorrect')
         }"
         >
-          <span class="material-symbols-outlined text-white"> shuffle </span>
+          <span class='tooltip'>Shuffle</span>
+          <span class="material-symbols-outlined text-white bg-slate-500 p-2 rounded-full" style="font-size: 2.25rem;"> shuffle </span>
+
         </button>
 </div>
         <div x-show="cards.length" class="fixed top-5 right-20 text-5xl" x-text="'% correct: ' + (answers_correct.size + answers_incorrect.size ? (answers_correct.size/(answers_correct.size + answers_incorrect.size)*100).toFixed(2):'0.00')"></div>
