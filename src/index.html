@@ -2,42 +2,99 @@
 
 <html lang="en">
   <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
     <title>HTML 5 Boilerplate</title>
-    <link rel="stylesheet" href="output.css">
+    <link rel="stylesheet" href="output.css" />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0"
+    />
   </head>
-  <body>
-	<script src="index.js" type="module"></script>
+  <body class="bg-neutral-300">
+    <script src="index.js" type="module"></script>
 
-  <div x-data="util">
-  <div x-data="{qa: new Map(), cards: []}">
-      <input type="file" accept=".csv" @change="({target})=>{
+    <div x-data="util">
+      <div x-data="{qa: new Map(), cards: [], randomize:false, answers_correct:new Set(), answers_incorrect:new Set()}">
+        <input
+          type="file"
+          accept=".csv"
+          @change="({target})=>{
+          cards=[]
           ReadCsv(target.files[0],(result)=>{
             cards = result
             console.log(cards)
+            answers_correct.clear()
+            answers_incorrect.clear()
           })
-      }">
-      <ul x-show="cards">
+      }"
+        />
+        <br>
+        <button
+        class="bg-slate-700 p-3 inline-block rounded-full"
+          @click="()=>{
+        Shuffle(cards)
+        answers_correct.clear()
+        answers_incorrect.clear()
+
+        //Erase all cards then reload
+        let tmp_cards = [...cards]
+        setTimeout(()=>{
+          console.log(tmp_cards)
+          cards=tmp_cards}, 50)
+        cards=[]
+
+        }"
+        >
+          <span class="material-symbols-outlined text-white"> shuffle </span>
+        </button>
+        <div x-show="cards.length" class="fixed top-5 right-20 text-5xl" x-text="answers_correct.size.toString()+'/'+cards.length"></div>
+        <div x-show="cards.length" class="fixed top-20 right-20 text-5xl" x-text="(cards.length - answers_correct.size - answers_incorrect.size).toString() + ' remaining'"></div>
+        <ol x-show="cards">
           <template x-for="card in cards">
-              <li x-data="{selected: null}" class="w-3">
-                <div x-text="'card: ' + card.question"></div>
-                <div >
-                  <template x-for="answer in Shuffle([...card.incorrect_answers, card.answer])">
-                    <div x-text="answer" :class="()=>{
-                      if(selected){
-                        return selected==answer ? 'bg-green-600' : 'bg-red-600'
-                      }
-                    }" @click="()=>{
+            <li
+              x-data="{selected: null}"
+              class="max-w-1/2 mx-auto p-5 rounded-lg border-coolGray-600 border-2 mb-5 bg-slate-50"
+            >
+              <div class="flex flex-row justify-center mb-5">
+                <div x-text="card.question" class="text-justify text-xl"></div>
+              </div>
+              <div>
+                <hr class="border-black mb-5">
+                <div class="flex flex-row flex-wrap">
+                  <template
+                    x-for="(answer,index) in Shuffle([...card.incorrect_answers, card.answer])"
+                    key="index"
+                  >
+                    <div class="basis-1/2 min-w-1/2 p-1" @click="()=>{
                       selected = selected ? selected : answer
-                    }"></div>
+                      if(answer === card.answer && !answers_incorrect.has(card) ){
+                        answers_correct.add(card)
+                      }else{
+                        answers_incorrect.add(card)
+                      }
+                    }">
+                      <div
+                        x-text="answer"
+                        class="text-center rounded-lg text-lg"
+                        :class="()=>{
+                      if(selected){
+                        let str = card.answer===answer ? 'bg-green-600' : 'bg-red-600'
+                        console.log('selected', selected, card.answer)
+                        str += answer === selected ? ' border-black border-4' : ''
+                        return str
+                      }
+                    }"
+                      ></div>
+                    </div>
                   </template>
                 </div>
-              </li>
+              </div>
+            </li>
           </template>
-      </ul>
-  </div>
-</div>
+        </ol>
+      </div>
+    </div>
   </body>
 </html>

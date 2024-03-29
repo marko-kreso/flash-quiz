@@ -40,12 +40,13 @@ function RandomSampleWithoutReplacement(arr, n){
 
 
 export function Shuffle(arr){
-    for(let i =0; i < arr; arr.length){
-        let rand_i = Math.floor(Math.random()*(arr.length-1))
-        let tmp = arr[i]
-        arr[i] = arr[rand_i]
-        arr[rand_i]=tmp
-    }
+    console.log("SHUFFLE",arr)
+        for(let i = 0; i < arr.length; i++){
+          let rand_i = Math.floor(Math.random()*(arr.length))
+          let tmp = arr[i]
+          arr[i] = arr[rand_i]
+          arr[rand_i] = tmp
+        }
     return arr
 }
 export default{
@@ -98,13 +99,13 @@ export default{
             dynamicTyping: true,
             /**
              * 
-             * @param {Array<{name: string, age: number}>} data
+             * @param {Array<{question: string, answer: number}>} data
              * 
              */
             complete: ({data})=>{
                 /**@type {QA} */
                 for(let result of data){
-                    qa.set(result.name,result.age)
+                    qa.set(result.question,result.answer)
                 }
                 cb(this.CreateCards(qa))
             }
