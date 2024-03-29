@@ -12,7 +12,7 @@
       href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0"
     />
   </head>
-  <body class="bg-neutral-300">
+  <body class="bg-blue-400">
     <script src="index.js" type="module"></script>
 
     <div x-data="util">
@@ -51,8 +51,8 @@
           <span class="material-symbols-outlined text-white"> shuffle </span>
         </button>
 </div>
-        <div x-show="cards.length" class="fixed top-5 right-20 text-5xl" x-text="answers_correct.size.toString()+'/'+cards.length"></div>
-        <div x-show="cards.length" class="fixed top-20 right-20 text-5xl" x-text="(cards.length - answers_correct.size - answers_incorrect.size).toString() + ' remaining'"></div>
+        <div x-show="cards.length" class="fixed top-5 right-20 text-5xl" x-text="'% correct: ' + (answers_correct.size + answers_incorrect.size ? (answers_correct.size/(answers_correct.size + answers_incorrect.size)*100).toFixed(2):'0.00')"></div>
+        <!-- <div x-show="cards.length" class="fixed top-5 right-20 text-5xl" x-text="'% correct: ' + (cards.length ? 1:2)"></div> -->
         <div x-show="cards" class="flex flex-row flex-wrap w-1/2 mx-auto space-y-5">
           <template x-for="card in cards">
             <div
