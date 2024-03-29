@@ -17,6 +17,7 @@
 
     <div x-data="util">
       <div x-data="{qa: new Map(), cards: [], randomize:false, answers_correct:new Set(), answers_incorrect:new Set()}">
+        <div class="ml-2">
         <input
           type="file"
           accept=".csv"
@@ -32,7 +33,7 @@
         />
         <br>
         <button
-        class="bg-slate-700 p-3 inline-block rounded-full"
+        class="bg-slate-700 p-3 inline-block"
           @click="()=>{
         Shuffle(cards)
         answers_correct.clear()
@@ -49,6 +50,7 @@
         >
           <span class="material-symbols-outlined text-white"> shuffle </span>
         </button>
+</div>
         <div x-show="cards.length" class="fixed top-5 right-20 text-5xl" x-text="answers_correct.size.toString()+'/'+cards.length"></div>
         <div x-show="cards.length" class="fixed top-20 right-20 text-5xl" x-text="(cards.length - answers_correct.size - answers_incorrect.size).toString() + ' remaining'"></div>
         <ol x-show="cards">
