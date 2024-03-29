@@ -53,7 +53,7 @@
 </div>
         <div x-show="cards.length" class="fixed top-5 right-20 text-5xl" x-text="'% correct: ' + (answers_correct.size + answers_incorrect.size ? (answers_correct.size/(answers_correct.size + answers_incorrect.size)*100).toFixed(2):'0.00')"></div>
         <!-- <div x-show="cards.length" class="fixed top-5 right-20 text-5xl" x-text="'% correct: ' + (cards.length ? 1:2)"></div> -->
-        <div x-show="cards" class="flex flex-row flex-wrap w-1/2 mx-auto space-y-5">
+        <div x-show="cards" class="flex flex-row flex-wrap w-1/2 mx-auto space-y-5 mb-5">
           <template x-for="card in cards">
             <div
               x-data="{selected: null}"
