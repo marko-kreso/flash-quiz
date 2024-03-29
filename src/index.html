@@ -16,7 +16,7 @@
     <script src="index.js" type="module"></script>
 
     <div x-data="util">
-      <div x-data="{qa: new Map(), cards: [], randomize:false, answers_correct:new Set(), answers_incorrect:new Set()}"
+      <div x-data="{qa: new Map(), cards: [], answers_correct:new Set(), answers_incorrect:new Set()}"
           x-init="()=>{
             cards = localStorage.getItem('cards') ? JSON.parse(localStorage.getItem('cards')) : cards
             answers_correct = localStorage.getItem('answers_correct') ? new Set(JSON.parse(localStorage.getItem('answers_correct'))) : answers_correct
