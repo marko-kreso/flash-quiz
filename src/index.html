@@ -17,7 +17,7 @@
 
     <div x-data="util">
       <div x-data="{qa: new Map(), cards: [], randomize:false, answers_correct:new Set(), answers_incorrect:new Set()}">
-        <div class="ml-2">
+        <div class="fixed top-1 left-2 space-y-2">
         <input
           type="file"
           accept=".csv"
@@ -33,7 +33,7 @@
         />
         <br>
         <button
-        class="bg-slate-700 p-3 inline-block"
+        class="bg-slate-700 p-3 inline-block rounded-full"
           @click="()=>{
         Shuffle(cards)
         answers_correct.clear()
@@ -53,11 +53,11 @@
 </div>
         <div x-show="cards.length" class="fixed top-5 right-20 text-5xl" x-text="answers_correct.size.toString()+'/'+cards.length"></div>
         <div x-show="cards.length" class="fixed top-20 right-20 text-5xl" x-text="(cards.length - answers_correct.size - answers_incorrect.size).toString() + ' remaining'"></div>
-        <ol x-show="cards">
+        <div x-show="cards" class="flex flex-row flex-wrap w-1/2 mx-auto mt-2">
           <template x-for="card in cards">
-            <li
+            <div
               x-data="{selected: null}"
-              class="max-w-1/2 mx-auto p-5 rounded-lg border-coolGray-600 border-2 mb-5 bg-slate-50"
+              class=" p-5 rounded-lg border-coolGray-600 border-2 mb-5 bg-slate-50 min-w-full"
             >
               <div class="flex flex-row justify-center mb-5">
                 <div x-text="card.question" class="text-justify text-xl"></div>
@@ -93,9 +93,9 @@
                   </template>
                 </div>
               </div>
-            </li>
+            </div>
           </template>
-        </ol>
+        </div>
       </div>
     </div>
   </body>
