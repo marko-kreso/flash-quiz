@@ -7,7 +7,7 @@ import Papa from 'papaparse';
  */
 
 /**
- * @typedef {Map<string,string>} QA - Maps a question to an answer
+ * @typedef {Map<string,Set<string>>} QA - Maps a question to an answers
  */
 /**
  * @callback csvCallback
@@ -49,6 +49,13 @@ export function Shuffle(arr){
         }
     return arr
 }
+const flatIterator = function* (itr){
+    for(let item of itr){
+        if(item[Symbol.iterator] && typeof item != "string") yield* flatIterator(item)
+        else yield item
+    }
+}
+
 export default{
 
     /**
@@ -60,29 +67,38 @@ export default{
         /** @type {Array<Card>} */
         let cards = []
 
-        const answers = new Set([...qa.values()])
-        qa.forEach((answer,question)=>{
+        const answers = new Set([...flatIterator(qa.values())])
+
+        console.log(answers)
+        qa.forEach((question_answers,question)=>{
             /** @type {Card} */
-            let card = {
-                question: question,
-                answer: answer
-            }
+            question_answers.forEach((question_answer)=>{
+                let card = {
+                    question: question,
+                    answer: question_answer
+                }
 
-            if(answer === "true"){
-                card.incorrect_answers = ["false"]
-            }
-            else if(answer === "false"){
-                card.incorrect_answers = ["true"]
-            }else{
-                answers.delete(answer)
-                card.incorrect_answers = RandomSampleWithoutReplacement(Array.from(answers), 3)
-                answers.add(answer)
-            }
+                if(question_answer === "true"){
+                    card.incorrect_answers = ["false"]
+                }
+                else if(question_answer === "false"){
+                    card.incorrect_answers = ["true"]
+                }else{
+                    for(let card_answer of qa.get(question)){
+                        answers.delete(card_answer)
+                    }
+                    card.incorrect_answers = RandomSampleWithoutReplacement(Array.from(answers), 3)
+                    for(let card_answer of qa.get(question)){
+                        answers.add(card_answer)
+                    }
+                }
 
-            cards.push(
-                card
-            )
+                cards.push(
+                    card
+                )
+            })
         })
+        console.log(cards)
 
         return cards
     },
@@ -105,7 +121,11 @@ export default{
             complete: ({data})=>{
                 /**@type {QA} */
                 for(let result of data){
-                    qa.set(result.question,result.answer)
+                    if(qa.has(result.question)){
+                        qa.get(result.question).add(result.answer)
+                    }else{
+                        qa.set(result.question, new Set([result.answer]))
+                    }
                 }
                 cb(this.CreateCards(qa))
             }
