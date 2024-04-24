@@ -67,7 +67,6 @@ export default{
     CreateCards(qa){
         /** @type {Array<Card>} */
         let cards = []
-
         const answers = new Set([...flatIterator(qa.values())])
 
         console.log(answers)
@@ -122,13 +121,28 @@ export default{
              */
             complete: ({data})=>{
                 /**@type {QA} */
+                let i = 1
+                let missing_lines = []
                 for(let result of data){
+                    i+=1
+                    if(!result.question || !result.answer){
+                        missing_lines.push(i)
+                        continue
+                    }
+                    result.question = result.question.trim()
+                    result.answer = result.answer.trim()
+
                     if(qa.has(result.question)){
                         qa.get(result.question).add(result.answer)
                     }else{
                         qa.set(result.question, new Set([result.answer]))
                     }
                 }
+                if(missing_lines.length > 0){
+                    alert(`csv file is formatted incorrectly a question or answer missing in the following lines: ${missing_lines}`)
+                    return
+                }
+
                 cb(this.CreateCards(qa))
             }
         })
