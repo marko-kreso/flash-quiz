@@ -19,7 +19,7 @@
 
 <style>
 .frontToBack{
-  transition: transform .25s;
+  transition: transform .35s;
   transform-style: preserve-3d;
 }
 </style>
