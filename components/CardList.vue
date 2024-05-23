@@ -1,7 +1,7 @@
 <template>
   <ul class="flex flex-col items-center">
     <template v-for="item in items">
-      <li class="w-1/2">
+      <li :class="props.liClass">
         <slot :item="item"></slot>
       </li>
     </template>
@@ -10,8 +10,10 @@
 
 <script lang="ts" setup>
   const props = defineProps({
-    url: String
+    url: String,
+    liClass: String 
   })
+
   
   const items = ref<{front: String, back:String}[]>([])
 
