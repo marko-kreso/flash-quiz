@@ -1,6 +1,6 @@
 <template>
         <div class="h-full">
-          <CardList id="hello" :i="filtIndex" url="https://test.com" v-slot="slotprops" class="flex items-center h-full" >
+          <CardList @loaded="(elements)=>items=elements" id="hello" url="https://test.com" v-slot="slotprops" class="flex items-center h-full" >
             <li v-if="!edit && currView == View.List" class="w-1/2">
               <QuizCard  class="mb-2 border-2 border-slate-400 rounded-md min-h-64">
                 <template #front>{{slotprops.item.front}}</template>
@@ -15,7 +15,7 @@
             </li>
             <li v-if="!edit && currView == View.Carousel && currIndex == slotprops.i" class="w-1/2 h-full flex flex-col justify-center">
               <div>
-                <QuizCard  class="mb-2 border-2 border-slate-400 rounded-md min-h-64">
+                <QuizCard v-model="carouselCard"  class="mb-2 border-2 border-slate-400 rounded-md min-h-64">
                   <template #front>{{slotprops.item.front}}</template>
                   <template #back>{{slotprops.item.back}}</template>
                 </QuizCard>
@@ -40,14 +40,45 @@
         </div>
 </template>
 <script setup lang="ts">
+
 const edit = useState('edit')
 const currView = useState('activeView')
-const currIndex = ref(0)
 enum View{
   List = "List",
   SideBySide = "Side-By-Side",
   Carousel = "Carousel",
 }
 const carouselIconSizes="2em"
+const carouselCard = ref(false)
+
+const items: Ref<{front: String, back:String}[]|null> = ref(null)
+const currIndex = ref(0)
+
+let keyLock = 0
+
+watch(items, ()=>{
+  window.addEventListener('keydown', (e)=>{
+    if(currView.value !== View.Carousel || keyLock++){
+      return
+    }
+
+    switch(e.code){
+      case "Space":
+        carouselCard.value = !carouselCard.value
+        break
+      case "ArrowRight":
+        currIndex.value = Math.min(currIndex.value+1, items.value!.length)
+        break
+      case "ArrowLeft":
+        currIndex.value = Math.max(currIndex.value-1, 0)
+        break
+    }
+  })
+  window.addEventListener('keyup', (e)=>{
+    keyLock=0
+  })
+
+})
+
 watch(currIndex, ()=>{console.log(currIndex)})
 </script>

@@ -14,7 +14,7 @@
 </template>
 
 <script lang="ts" setup>
-  const isFlipped = ref(false)
+  const isFlipped = defineModel({default: false})
 </script>
 
 <style>

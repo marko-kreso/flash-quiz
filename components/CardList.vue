@@ -50,7 +50,7 @@
        {front: 'question 2', back: 'answer 2'},
     
     ]
-      console.log(items.value)
+    emit('loaded', items.value)
     }, 1000)
   })
 
