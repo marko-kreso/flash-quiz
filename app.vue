@@ -11,7 +11,7 @@
     <div class="flex-row flex flex-1 min-h-0">
       <div class="basis-48 flex flex-col border-r">
         <div class="flex-1">
-          <nav class="h-full flex flex-col bg-white">counter
+          <nav class="h-full flex flex-col bg-white">
             <ul class="flex flex-col flex-1">
               <li class="flex flex-col justify-center h-12"><IconListElement name="ph:stack-duotone" text="Collection"/></li>
               <li class="flex flex-col justify-center h-12"><IconListElement name="ph:globe-simple-duotone" text="Explore"/></li>
