@@ -1,8 +1,8 @@
 <template>
   <ul class="flex flex-col items-center">
-    <template v-for="item in items">
+    <template v-for="item,i in items">
       <li :class="props.liClass">
-        <slot :item="item"></slot>
+        <slot :item="item" :i="i"></slot>
       </li>
     </template>
   </ul>
