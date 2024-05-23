@@ -1,28 +1,41 @@
 <template>
-        <div>
-          <CardList id="hello" url="https://test.com" v-slot="slotprops" class="flex items-center" :liClass="edit || currView==View.SideBySide ? 'w-3/4': 'w-1/2'">
-            <QuizCard v-if="!edit && currView == View.List" class="mb-2 border-2 border-slate-400 rounded-md min-h-64">
-              <template #front>{{slotprops.item.front}}</template>
-              <template #back>{{slotprops.item.back}}</template>
-            </QuizCard>
-            <div v-if="!edit && currView == View.SideBySide" class="flex flex-row justify-center mb-2 space-x-2">
-              <div class="border-2 border-slate-400 rounded-md min-h-64 flex-1 bg-white">{{slotprops.item.front}}</div>
-              <div class="border-2 border-slate-400 rounded-md min-h-64 flex-1 bg-white">{{slotprops.item.back}}</div>
-            </div>
-            <div v-if="!edit && currView == View.Carousel && currIndex == slotprops.i">
+        <div class="h-full">
+          <CardList id="hello" :i="filtIndex" url="https://test.com" v-slot="slotprops" class="flex items-center h-full" >
+            <li v-if="!edit && currView == View.List" class="w-1/2">
               <QuizCard  class="mb-2 border-2 border-slate-400 rounded-md min-h-64">
                 <template #front>{{slotprops.item.front}}</template>
                 <template #back>{{slotprops.item.back}}</template>
               </QuizCard>
-              <div>
-                <button @click="()=>currIndex--">Prev</button>
-                <button @click="()=>currIndex++">Next</button>
+            </li>
+            <li v-if="!edit && currView == View.SideBySide" class="w-3/4">
+              <div class="flex flex-row justify-center mb-2 space-x-2">
+                <div class="border-2 border-slate-400 rounded-md min-h-64 flex-1 bg-white">{{slotprops.item.front}}</div>
+                <div class="border-2 border-slate-400 rounded-md min-h-64 flex-1 bg-white">{{slotprops.item.back}}</div>
               </div>
-            </div>
-            <div v-if="edit" class="flex flex-row justify-center mb-2 space-x-2">
-              <div class="border-2 border-slate-400 rounded-md min-h-64 flex-1 bg-white" contenteditable="true">{{slotprops.item.front}}</div>
-              <div class="border-2 border-slate-400 rounded-md min-h-64 flex-1 bg-white" contenteditable="true">{{slotprops.item.back}}</div>
-            </div>
+            </li>
+            <li v-if="!edit && currView == View.Carousel && currIndex == slotprops.i" class="w-1/2 h-full flex flex-col justify-center">
+              <div>
+                <QuizCard  class="mb-2 border-2 border-slate-400 rounded-md min-h-64">
+                  <template #front>{{slotprops.item.front}}</template>
+                  <template #back>{{slotprops.item.back}}</template>
+                </QuizCard>
+                <div class="text-center">
+                  <button @click="()=>currIndex = 0"><Icon :size="carouselIconSizes" name="ph:caret-double-left-duotone"></Icon></button>
+                  <button @click="()=>currIndex=Math.max(currIndex-1,0)"><Icon :size="carouselIconSizes" name="ph:caret-left-duotone"></Icon></button>
+                <div class="w-16 inline-block text-center">
+                  {{ currIndex+1 }} of {{ slotprops.items.length }}
+                </div>
+                  <button @click="()=>currIndex = currIndex = Math.min(currIndex+1,slotprops.items.length-1) "><Icon :size="carouselIconSizes" name="ph:caret-right-duotone"></Icon></button>
+                  <button @click="()=>currIndex = slotprops.items.length-1"><Icon :size="carouselIconSizes" name="ph:caret-double-right-duotone"></Icon></button>
+                </div>
+              </div>
+            </li>
+            <li v-if="edit" class="w-3/4">
+              <div class="flex flex-row justify-center mb-2 space-x-2">
+                <div class="border-2 border-slate-400 rounded-md min-h-64 flex-1 bg-white" contenteditable="true">{{slotprops.item.front}}</div>
+                <div class="border-2 border-slate-400 rounded-md min-h-64 flex-1 bg-white" contenteditable="true">{{slotprops.item.back}}</div>
+              </div>
+            </li>
           </CardList>
         </div>
 </template>
@@ -35,4 +48,6 @@ enum View{
   SideBySide = "Side-By-Side",
   Carousel = "Carousel",
 }
+const carouselIconSizes="2em"
+watch(currIndex, ()=>{console.log(currIndex)})
 </script>

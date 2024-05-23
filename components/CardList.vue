@@ -1,18 +1,13 @@
 <template>
-  <ul class="flex flex-col items-center">
+  <ul class="flex flex-col items-center h-full">
     <template v-for="item,i in items">
-      <li :class="props.liClass">
-        <slot :item="item" :i="i"></slot>
-      </li>
+        <slot :item="item" :i="i" :items="items"></slot>
     </template>
   </ul>
 </template>
 
 <script lang="ts" setup>
-  const props = defineProps({
-    url: String,
-    liClass: String 
-  })
+  const props = defineProps(['url'])
 
   
   const items = ref<{front: String, back:String}[]>([])
