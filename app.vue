@@ -6,7 +6,7 @@
           <DropDown :selected="true" v-if="!edit" :elements="mapKeys" v-model="activeView">
             <template #toggler>
               <button  :class="['border', 'border-black', 'p-2', 'mr-3', 'rounded-md', ...buttonProperties]">
-                <IconListElement :name="layoutIcon" text="Layout" />
+                <IconListElement :name="layoutIcon" :text="activeView" />
               </button>
             </template>
           </DropDown>
@@ -50,7 +50,7 @@ enum View{
 }
 
 const viewMap: Map<View, string> = new Map([
-  [View.List, "ph:layout-duotone"],
+  [View.List, "ph:list-numbers-duotone"],
   [View.SideBySide, "ph:square-split-horizontal-duotone"],
   [View.Carousel, "ph:caret-double-right-duotone"],
 ])
