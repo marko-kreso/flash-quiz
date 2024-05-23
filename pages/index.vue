@@ -68,9 +68,11 @@ watch(items, ()=>{
         break
       case "ArrowRight":
         currIndex.value = Math.min(currIndex.value+1, items.value!.length)
+        carouselCard.value = false
         break
       case "ArrowLeft":
         currIndex.value = Math.max(currIndex.value-1, 0)
+        carouselCard.value = false
         break
     }
   })
