@@ -9,9 +9,6 @@
                 <IconListElement :name="layoutIcon" text="Layout" />
               </button>
             </template>
-            <!-- <template v-for="val in viewMap.keys()">
-              <DropDownElement>{{val}}</DropDownElement>
-            </template> -->
           </DropDown>
           <button :class="['border', 'border-black', 'p-2', 'mr-3', 'rounded-md', ...buttonProperties]" @click="()=>edit=!edit">
             <IconListElement name="ph:pencil-duotone" text="Edit" />
@@ -43,6 +40,7 @@
 <script setup lang="ts">
 
 const edit = useState('edit', ()=>false)
+const activeView = useState('activeView', ()=>View.List)
 const buttonProperties = computed(()=>[edit.value ? 'bg-blue-600' : '', edit.value ? 'text-white':'', !edit.value ? 'edit':''])
 
 enum View{
@@ -50,7 +48,6 @@ enum View{
   SideBySide = "Side-By-Side",
   Carousel = "Carousel",
 }
-const currView: Ref<View> = ref(View.List)
 
 const viewMap: Map<View, string> = new Map([
   [View.List, "ph:layout-duotone"],
@@ -58,9 +55,7 @@ const viewMap: Map<View, string> = new Map([
   [View.Carousel, "ph:caret-double-right-duotone"],
 ])
 const mapKeys: ComputedRef<string[]> = computed(()=>[...viewMap.keys()].map((k)=>k.toString()))
-const activeView = ref(View.List)
-const layoutIcon = computed(()=>viewMap.get(currView.value))
-watch(activeView, ()=>{console.log('activeView', activeView.value)})
+const layoutIcon = computed(()=>viewMap.get(activeView.value))
 
 </script>
 <style>
