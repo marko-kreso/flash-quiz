@@ -52,12 +52,12 @@ enum View{
 }
 const currView: Ref<View> = ref(View.List)
 
-const viewMap: Map<View, String> = new Map([
+const viewMap: Map<View, string> = new Map([
   [View.List, "ph:layout-duotone"],
   [View.SideBySide, "ph:square-split-horizontal-duotone"],
   [View.Carousel, "ph:caret-double-right-duotone"],
 ])
-const mapKeys = computed(()=>[...viewMap.keys()].map((k)=>k.toString()))
+const mapKeys: ComputedRef<string[]> = computed(()=>[...viewMap.keys()].map((k)=>k.toString()))
 const activeView = ref(View.List)
 const layoutIcon = computed(()=>viewMap.get(currView.value))
 watch(activeView, ()=>{console.log('activeView', activeView.value)})
