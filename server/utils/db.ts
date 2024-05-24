@@ -1,5 +1,4 @@
 import pg from 'pg'
-import { createClient } from 'redis'
 const config = useRuntimeConfig()
 
 const { Client } = pg

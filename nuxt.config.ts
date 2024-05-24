@@ -5,10 +5,17 @@ export default defineNuxtConfig({
   tailwindcss: {
     exposeConfig: true,
   },
-  runtimeConfig:{
-    redis: 'redis://<REDIS_USER>:<REDIS_PASSWORD>@<REDIS_HOST>:<REDIS_PORT>',
-    postgres: 'postgresurl'
-  }
+  // runtimeConfig:{
+  //   redis: 'redis://<REDIS_USER>:<REDIS_PASSWORD>@<REDIS_HOST>:<REDIS_PORT>',
+  //   postgres: 'postgresurl'
+  // },
+  // nitro: {
+  //   esbuild: {
+  //     options: {
+  //       target: 'es2022'
+  //     }
+  //   }
+  // }
   // nitro: {
   //   storage: {
   //     redis: {

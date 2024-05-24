@@ -10,7 +10,7 @@
               </button>
             </template>
           </DropDown>
-          <button :class="['border', 'border-black', 'p-2', 'mr-3', 'rounded-md', ...buttonProperties]" @click="()=>edit=!edit">
+          <button v-if="loggedIn" :class="['border', 'border-black', 'p-2', 'mr-3', 'rounded-md', ...buttonProperties]" @click="()=>edit=!edit">
             <IconListElement name="ph:pencil-duotone" text="Edit" />
           </button>
         </div>
@@ -25,8 +25,11 @@
             </ul>
             <ul class="flex flex-col justify-end flex-1">
               <li class="flex flex-col justify-center h-12"><IconListElement name="ph:question-duotone" text="About"/></li>
-              <li class="flex flex-col justify-center h-12"><IconListElement name="ph:user-circle-duotone" text="Profile"/></li>
-              <li class="flex flex-col justify-center h-12"><IconListElement name="ph:signpost-duotone" text="Logout"/></li>
+              <li v-if="loggedIn" class="flex flex-col justify-center h-12"><IconListElement name="ph:user-circle-duotone" text="Profile"/></li>
+              <li v-if="loggedIn" class="flex flex-col justify-center h-12"><IconListElement name="ph:signpost-duotone" text="Logout"/></li>
+              <!-- <li class="flex flex-row align-center justify-evenly mb-1"><button class="rounded-md bg-slate-400 px-3 py-2">Log in</button> <button class="rounded-md bg-slate-400 px-3 py-2">Sign up</button></li> -->
+              <li  class="flex flex-col justify-center h-12"><IconListElement name="ph:signpost-duotone" text="Logout"/></li>
+              <li  class="flex flex-col justify-center h-12"><IconListElement name="ph:signpost-duotone" text="Logout"/></li>
             </ul>
           </nav>
         </div>
@@ -39,6 +42,7 @@
 </template>
 <script setup lang="ts">
 
+const loggedIn = useCookie('session')
 const edit = useState('edit', ()=>false)
 const activeView = useState('activeView', ()=>View.List)
 const buttonProperties = computed(()=>[edit.value ? 'bg-blue-600' : '', edit.value ? 'text-white':'', !edit.value ? 'edit':''])
