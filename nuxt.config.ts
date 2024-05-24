@@ -4,5 +4,17 @@ export default defineNuxtConfig({
   modules: ["@nuxtjs/tailwindcss", "nuxt-icon"],
   tailwindcss: {
     exposeConfig: true,
+  },
+  runtimeConfig:{
+    redis: 'redis://<REDIS_USER>:<REDIS_PASSWORD>@<REDIS_HOST>:<REDIS_PORT>',
+    postgres: 'postgresurl'
   }
+  // nitro: {
+  //   storage: {
+  //     redis: {
+  //       driver: 'redis',
+  //       url: 'redis://<REDIS_USER>:<REDIS_PASSWORD>@<REDIS_HOST>:<REDIS_PORT>'
+  //     }
+  //   }
+  // }
 })

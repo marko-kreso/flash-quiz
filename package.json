@@ -12,10 +12,13 @@
   "dependencies": {
     "@nuxtjs/tailwindcss": "^6.12.0",
     "nuxt": "^3.11.2",
+    "pg": "^8.11.5",
+    "redis": "^4.6.14",
     "vue": "^3.4.27",
     "vue-router": "^4.3.2"
   },
   "devDependencies": {
+    "@types/pg": "^8.11.6",
     "nuxt-icon": "^0.6.10"
   }
 }
