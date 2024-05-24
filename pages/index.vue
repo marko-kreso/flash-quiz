@@ -67,7 +67,7 @@ watch(items, ()=>{
         carouselCard.value = !carouselCard.value
         break
       case "ArrowRight":
-        currIndex.value = Math.min(currIndex.value+1, items.value!.length)
+        currIndex.value = Math.min(currIndex.value+1, items.value!.length-1)
         carouselCard.value = false
         break
       case "ArrowLeft":
