@@ -63,6 +63,8 @@ watch(items, ()=>{
     }
 
     switch(e.code){
+      case "ArrowDown":
+      case "ArrowUp":
       case "Space":
         carouselCard.value = !carouselCard.value
         break
