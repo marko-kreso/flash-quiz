@@ -1,10 +1,56 @@
 <template>
-  <div>
-   LOGIN 
-  </div>
+    <div class="absolute top-1/2 left-1/3 text-8xl -translate-y-1/2 -translate-x-1/2">
+      GigaQuiz
+    </div>
+    <div class="bg-white absolute top-1/2 left-2/3 p-3 border border-black rounded-md -translate-y-1/2 -translate-x-1/2">
+      <TabView :tabs="['login', 'signup']">
+
+      <template #login>
+        <form class="flex flex-col items-center gap-3">
+          <input class="border border-black rounded-md p-1 w-80 " name="username" placeholder="email or username" type="text" required><br>
+          <input class="border border-black rounded-md p-1 w-80 " name="password" placeholder="password" type="password" required><br>
+          <div class="flex flex-row justify-evenly w-full">
+            <button class="px-2 py-1 bg-blue-400 rounded-md">Submit</button>  forgot password?
+          </div>
+        </form>
+      </template>
+      <template #signup>
+        <form class="flex flex-col items-center justify-evenly gap-3">
+          <input @change="(e)=>passwd = e.target?.value"class="border border-black rounded-md p-1 w-80 " name="password" placeholder="password" type="password" minlength="8" maxlength="20" required><br>
+          <input ref="pass" @change="(e)=>confPasswd = e.target?.value" class="border border-black rounded-md p-1 w-80 " name="password" placeholder="confirm password" type="password" minlength="8" maxlength="20" required><br>
+          <input class="border border-black rounded-md p-1 w-80 " name="email" placeholder="email" type="text" required><br>
+          <input class="border border-black rounded-md p-1 w-80 " name="username" placeholder="username" type="text" required><br>
+          <div class="flex flex-row justify-evenly w-full">
+            <button class="px-2 py-1 bg-blue-400 rounded-md">Submit</button> 
+          </div>
+        </form>
+      </template>
+      </TabView>
+    </div>
 </template>
 
 <script lang="ts" setup>
+  const passwd=ref("")
+  const confPasswd = ref("")
+  const passMatch = computed(()=>passwd.value===confPasswd.value)
+  const pass:any = ref(null)
+
+  watch(passMatch, (newVal)=>{
+    console.log('first')
+    if(!passwd.value.length || !confPasswd.value.length ){
+        pass.value.setCustomValidity("")
+        return
+    }
+    console.log('seconds', passMatch)
+    if(newVal){
+      pass.value.setCustomValidity("")
+      return
+    }
+     
+    pass.value.setCustomValidity("Passwords dont match")
+
+  })
+
 
 </script>
 
