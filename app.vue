@@ -20,16 +20,16 @@
         <div class="flex-1">
           <nav class="h-full flex flex-col bg-white">
             <ul class="flex flex-col flex-1">
-              <li class="flex flex-col justify-center h-12"><IconListElement name="ph:stack-duotone" text="Collection"/></li>
+              <li  class="flex flex-col justify-center h-12"><IconListElement name="ph:sign-in-duotone" text="Login"/></li>
+              <li  class="flex flex-col justify-center h-12"><IconListElement name="ph:arrow-square-up-right-duotone" text="Sign Up"/></li>
+              <!-- <li class="flex flex-row align-center justify-evenly mb-1"><button class="rounded-md bg-blue-400 px-3 py-2">Log in</button> <button class="rounded-md bg-orange-400 px-3 py-2">Sign up</button></li> -->
+              <li v-if="loggedIn" class="flex flex-col justify-center h-12"><IconListElement name="ph:stack-duotone" text="Collection"/></li>
               <li class="flex flex-col justify-center h-12"><IconListElement name="ph:globe-simple-duotone" text="Explore"/></li>
             </ul>
             <ul class="flex flex-col justify-end flex-1">
               <li class="flex flex-col justify-center h-12"><IconListElement name="ph:question-duotone" text="About"/></li>
               <li v-if="loggedIn" class="flex flex-col justify-center h-12"><IconListElement name="ph:user-circle-duotone" text="Profile"/></li>
               <li v-if="loggedIn" class="flex flex-col justify-center h-12"><IconListElement name="ph:signpost-duotone" text="Logout"/></li>
-              <!-- <li class="flex flex-row align-center justify-evenly mb-1"><button class="rounded-md bg-slate-400 px-3 py-2">Log in</button> <button class="rounded-md bg-slate-400 px-3 py-2">Sign up</button></li> -->
-              <li  class="flex flex-col justify-center h-12"><IconListElement name="ph:signpost-duotone" text="Logout"/></li>
-              <li  class="flex flex-col justify-center h-12"><IconListElement name="ph:signpost-duotone" text="Logout"/></li>
             </ul>
           </nav>
         </div>
