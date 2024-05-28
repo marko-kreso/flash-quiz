@@ -1,7 +1,7 @@
 <template>
   <main class="h-dvh">
     <div class="absolute top-1/2 left-1/3 text-8xl -translate-y-1/2 -translate-x-1/2">
-      GigaQuiz
+      <span class="text-blue-600">Giga</span>Quiz
     </div>
     <div class="bg-white absolute top-1/2 left-2/3 p-3 border border-black rounded-md -translate-y-1/2 -translate-x-1/2">
       <TabView :tabs="[{name: 'login', text:'Login'}, {name: 'Signup', text: 'Sign up'}]">
@@ -11,7 +11,7 @@
           <input class="border border-black rounded-md p-1 w-80 " name="username" placeholder="email or username" type="text" required><br>
           <input class="border border-black rounded-md p-1 w-80 " name="password" placeholder="password" type="password" required><br>
           <div class="flex flex-row justify-evenly w-full">
-            <button class="px-2 py-1 bg-blue-400 rounded-md text-white">Submit</button>  forgot password?
+            <button class="px-2 py-1 bg-blue-400 rounded-md text-white">Submit</button> <NuxtLink to="/forgot">forgot password?</NuxtLink> 
           </div>
         </form>
       </template>
