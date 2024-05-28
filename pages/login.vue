@@ -4,18 +4,18 @@
       GigaQuiz
     </div>
     <div class="bg-white absolute top-1/2 left-2/3 p-3 border border-black rounded-md -translate-y-1/2 -translate-x-1/2">
-      <TabView :tabs="['login', 'signup']">
+      <TabView :tabs="[{name: 'login', text:'Login'}, {name: 'Signup', text: 'Sign up'}]">
 
       <template #login>
         <form class="flex flex-col items-center gap-3">
           <input class="border border-black rounded-md p-1 w-80 " name="username" placeholder="email or username" type="text" required><br>
           <input class="border border-black rounded-md p-1 w-80 " name="password" placeholder="password" type="password" required><br>
           <div class="flex flex-row justify-evenly w-full">
-            <button class="px-2 py-1 bg-blue-400 rounded-md">Submit</button>  forgot password?
+            <button class="px-2 py-1 bg-blue-400 rounded-md text-white">Submit</button>  forgot password?
           </div>
         </form>
       </template>
-      <template #signup>
+      <template #Signup>
         <form class="flex flex-col items-center justify-evenly gap-3">
           <input @change="(e)=>passwd = e.target?.value"class="border border-black rounded-md p-1 w-80 " name="password" placeholder="password" type="password" minlength="8" maxlength="20" required><br>
           <input ref="pass" @change="(e)=>confPasswd = e.target?.value" class="border border-black rounded-md p-1 w-80 " name="password" placeholder="confirm password" type="password" minlength="8" maxlength="20" required><br>
