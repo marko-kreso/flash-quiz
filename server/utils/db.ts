@@ -1,9 +1,4 @@
-import pg from 'pg'
-const config = useRuntimeConfig()
+import postgres from 'postgres'
+const sql = postgres()
 
-const { Client } = pg
-const db = new Client({
-    connectionString: config.postgres
-})
-
-export default db
+export default sql
