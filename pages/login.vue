@@ -1,4 +1,5 @@
 <template>
+  <main class="h-dvh">
     <div class="absolute top-1/2 left-1/3 text-8xl -translate-y-1/2 -translate-x-1/2">
       GigaQuiz
     </div>
@@ -27,9 +28,11 @@
       </template>
       </TabView>
     </div>
+</main>
 </template>
 
 <script lang="ts" setup>
+
   const passwd=ref("")
   const confPasswd = ref("")
   const passMatch = computed(()=>passwd.value===confPasswd.value)
@@ -52,6 +55,9 @@
   })
 
 
+  definePageMeta({
+    layout: 'blank'
+  })
 </script>
 
 <style>
