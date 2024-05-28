@@ -28,10 +28,8 @@
           <input id="test" v-model.lazy="confPasswd" @change="(event)=>{
             if(passwd !== confPasswd){
               event?.target?.setCustomValidity('Passwords do not match')
-              passMatch = false
               return
             }
-            passMatch = true
             event?.target?.setCustomValidity('')
           }" class="border border-black rounded-md p-1 w-80 " name="password" placeholder="confirm password" type="password" minlength="8" maxlength="20" required><br>
           <input class="border border-black rounded-md p-1 w-80 " name="email" placeholder="email" type="text" required><br>
@@ -50,13 +48,13 @@
 
   const passwd=ref("")
   const confPasswd = ref("")
-  const passMatch:globalThis.Ref<null | boolean> = ref(null)
-  const borderColor = computed(()=>{
-    if(passMatch === null){
-      return ''
-    }
-    return passMatch ? 'border-green' : 'border-black'
-  })
+  // const passMatch:globalThis.Ref<null | boolean> = ref(null)
+  // const borderColor = computed(()=>{
+  //   if(passMatch === null){
+  //     return ''
+  //   }
+  //   return passMatch ? 'border-green' : 'border-black'
+  // })
   const retUrl = ref(useRoute().query.returnUrl)
 
 

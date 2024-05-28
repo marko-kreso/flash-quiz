@@ -21,7 +21,7 @@ CREATE TABLE IF NOT EXISTS social_users(
 );
 
 CREATE TABLE IF NOT EXISTS card_sets(
-    user_name TEXT REFERENCES users(user_name) NOT NULL,
+    user_name TEXT REFERENCES users(user_name) NOT NULL
     ,path TEXT NOT NULL
     ,questions TEXT[] NOT NULL
     ,answers TEXT[] NOT NULL

@@ -1,4 +1,4 @@
--- name: CreateUser :one
+-- name: CreateUser :exec
 INSERT INTO users(user_name, email)
 VALUES ($1, $2);
 
@@ -7,7 +7,7 @@ SELECT * FROM  users
 WHERE email = $1 OR user_name = $1;
 
 
--- name: DeleteUser :one
+-- name: DeleteUser :exec
 DELETE FROM  users
 WHERE user_name = $1;
 
@@ -19,18 +19,18 @@ INSERT INTO password_change_request (
 
 
 -- name: GetPassowordReset :one
-SELECT *  password_change_request WHERE
-id = $1 AND token = sha256($2 || salt) AND (CURRENT_TIMESTAMP - created_on) < '10 min'::interval
-RETURNING *;
+SELECT * FROM password_change_request WHERE
+id = $1 
+AND token = sha256($2 || salt) 
+AND (now() - created_on) < '10 min'::interval;
 
 -- name: CreatePassword :exec
 INSERT INTO passwords (
     user_name
     ,password
-)
+) VALUES($1, $2);
 
 -- name: UpdatePassword :exec
-UPDATE passwords SET password = $1 
+UPDATE passwords SET password = $2
 WHERE user_name = $1;
-
 
