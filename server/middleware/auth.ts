@@ -1,17 +1,19 @@
 
+const authWhitelist = new Set(['/api/login', '/api/resetPassword'])
+
+
 // import redisClient from "../utils/redis"
 export default defineEventHandler(async (event) => {
     const session = getCookie(event, 'session')
+    // const username = await redisClient.get(session)
 
-    if(event.path === "/api/login" && !session){
-        console.log('returning')
+
+    if(!session && event.path.startsWith('/api') && !authWhitelist.has(event.path)){
+        sendRedirect(event, '/login')
         return
     }
 
-    // if(!session){
-    //     sendRedirect(event, '/login')
-    //     return
-    // }
+
     // const csrf = getHeader(event, 'csrf')
 
     // if(!session || !csrf){
@@ -29,7 +31,6 @@ export default defineEventHandler(async (event) => {
     //     return
     // }
 
-    // const username = await redisClient.get(session)
     // if(!username){
     
     //     throw createError({

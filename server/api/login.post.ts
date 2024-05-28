@@ -1,5 +1,5 @@
-import crypto from 'crypto'
 import db from '../utils/db'
+import generateRandomValue from '../utils/tools'
 // import client from '../utils/redis'
 
 export default defineEventHandler(async (event) => {
@@ -43,17 +43,3 @@ export default defineEventHandler(async (event) => {
   
 })
 
-
-function generateRandomValue(size:number): Promise<string>{
-return new Promise((resolve, reject)=>{
-        crypto.randomBytes(size, function(err, buffer){
-            if(err){
-              reject(err)
-            }
-            else{
-              resolve(buffer.toString('base64'))
-            } 
-        })
-      })
-
-}

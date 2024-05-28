@@ -5,7 +5,6 @@
                 <div class="flex-1 p-2 m-1 hover:cursor-pointer">
                     <div  :class="['text-center', active===name ? 'active text-blue-600' : '']" @click="()=>{
                         active=name
-                        console.log('hello', 'name', tab, 'active',active) 
                         }">{{ text }}</div> 
 
                         </div>
@@ -14,7 +13,9 @@
         <hr>
         <br>
         <template v-for="{name} in props.tabs">
-            <slot v-if="active === name" :name="name"></slot>
+            <div :class="{'hidden': active!==name}">
+                <slot :name="name"></slot>
+            </div>
         </template>
     </div>
 </template>
@@ -22,6 +23,7 @@
 const props = defineProps(['tabs'])
 console.log(props.tabs)
 const active = ref(props.tabs[0].name)
+console.log(active.value)
 </script>
 <style>
     .tab div:not(:first-child){

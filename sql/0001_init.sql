@@ -1,27 +1,27 @@
 -- +migrate Up
 CREATE TABLE IF NOT EXISTS users(
-    userName TEXT PRIMARY KEY
+    user_name TEXT PRIMARY KEY
     ,email TEXT UNIQUE NOT NULL
     ,banned BOOLEAN DEFAULT false NOT NULL
-    ,createdOn TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL
+    ,created_on TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL
 );
-CREATE INDEX IF NOT EXISTS emailIdx ON users(email);
+CREATE INDEX IF NOT EXISTS email_idx ON users(email);
 
 
 CREATE TABLE IF NOT EXISTS passwords(
-    userName TEXT PRIMARY KEY REFERENCES users(userName)
+    user_name TEXT PRIMARY KEY REFERENCES users(user_name) ON DELETE CASCADE
     ,password TEXT NOT NULL
 );
 
-CREATE TABLE IF NOT EXISTS socialUsers(
-    socialID TEXT NOT NULL
-    ,socialMedia TEXT NOT NULL
-    ,userName TEXT UNIQUE REFERENCES users(userName) NOT NULL
-    ,PRIMARY KEY (socialID, socialMedia)
+CREATE TABLE IF NOT EXISTS social_users(
+     social_id TEXT NOT NULL
+    ,social_media TEXT NOT NULL
+    ,user_name TEXT UNIQUE REFERENCES users(user_name) ON DELETE CASCADE NOT NULL
+    ,PRIMARY KEY (social_id, social_media)
 );
 
-CREATE TABLE IF NOT EXISTS cardSets(
-    userName TEXT REFERENCES users(userName) NOT NULL,
+CREATE TABLE IF NOT EXISTS card_sets(
+    user_name TEXT REFERENCES users(user_name) NOT NULL,
     ,path TEXT NOT NULL
     ,questions TEXT[] NOT NULL
     ,answers TEXT[] NOT NULL
@@ -30,24 +30,34 @@ CREATE TABLE IF NOT EXISTS cardSets(
         || SETWEIGHT(TO_TSVECTOR('english', ARRAY_TO_STRING(questions, ' ')), 'B')
         || SETWEIGHT(TO_TSVECTOR('english', ARRAY_TO_STRING(answers, ' ')), 'C')
     ) STORED
-    ,createdOn TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL
-    ,PRIMARY KEY (userName, path)
+    ,created_on TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL
+    ,PRIMARY KEY (user_name, path)
 );
 
-CREATE TABLE IF NOT EXISTS userFavorites(
-    userName TEXT REFERENCES users(userName) NOT NULL
-    ,setUser TEXT NOT NULL REFERENCES cardSets(userName)
-    ,path TEXT NOT NULL REFERENCES cardSets(path)
-    ,PRIMARY KEY(userName, setUser, path)
+CREATE TABLE IF NOT EXISTS user_favorites(
+    user_name TEXT REFERENCES users(user_name) ON DELETE CASCADE NOT NULL 
+    ,set_user TEXT NOT NULL REFERENCES card_sets(user_name)
+    ,path TEXT NOT NULL REFERENCES card_sets(path)
+    ,PRIMARY KEY(user_name, set_user, path)
 );
 
-CREATE INDEX IF NOT EXISTS favoriteIdx ON userFavorites(setUser, path);
+CREATE INDEX IF NOT EXISTS favorite_idx ON UserFavorites(set_user, path);
+
+CREATE TABLE IF NOT EXISTS password_change_request(
+    id TEXT
+    ,token Text UNIQUE NOT NULL
+    ,user_name TEXT REFERENCES users(user_name) ON DELETE CASCADE NOT NULL 
+    ,salt TEXT NOT NULL
+    ,created_on TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL
+    ,PRIMARY KEY(id) 
+);
 
 -- +migrate Down
-DROP INDEX IF EXISTS favoriteIdx;
-DROP TABLE IF EXISTS userFavorites;
-DROP TABLE IF EXISTS cardSets;
-DROP TABLE IF EXISTS socialUsers;
+DROP INDEX IF EXISTS favorite_idx;
+DROP TABLE IF EXISTS user_favorites;
+DROP TABLE IF EXISTS card_sets;
+DROP TABLE IF EXISTS social_users;
 DROP TABLE IF EXISTS passwords;
-DROP INDEX IF EXISTS emailIdx;
+DROP INDEX IF EXISTS email_idx;
 DROP TABLE IF EXISTS users;
+DROP TABLE IF EXISTS password_change_request;
