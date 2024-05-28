@@ -22,7 +22,7 @@
           <input class="border border-black rounded-md p-1 w-80 " name="email" placeholder="email" type="text" required><br>
           <input class="border border-black rounded-md p-1 w-80 " name="username" placeholder="username" type="text" required><br>
           <div class="flex flex-row justify-evenly w-full">
-            <button class="px-2 py-1 bg-blue-400 rounded-md">Submit</button> 
+            <button class="px-2 py-1 bg-blue-400 rounded-md text-white">Submit</button> 
           </div>
         </form>
       </template>
