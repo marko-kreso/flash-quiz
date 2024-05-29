@@ -32,5 +32,6 @@ export default defineEventHandler(async (event) => {
     throw new Error('Unexpected number of rows inserted')
   }
 
+  // TODO: ADD EMAIL EVENT
   setResponseStatus(event, 400)  
 })

@@ -6,6 +6,7 @@ const authWhitelist = new Set(['/api/login', '/api/resetPassword'])
 export default defineEventHandler(async (event) => {
     const session = getCookie(event, 'session')
     // const username = await redisClient.get(session)
+    // const 
 
 
     if(!session && event.path.startsWith('/api') && !authWhitelist.has(event.path)){

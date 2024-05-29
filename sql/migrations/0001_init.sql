@@ -21,8 +21,8 @@ CREATE TABLE IF NOT EXISTS social_users(
 );
 
 CREATE TABLE IF NOT EXISTS card_sets(
-    username TEXT REFERENCES users(username) NOT NULL
-    ,path TEXT NOT NULL
+    path TEXT  PRIMARY KEY
+    ,username TEXT REFERENCES users(username) NOT NULL
     ,questions TEXT[] NOT NULL
     ,answers TEXT[] NOT NULL
     ,search TSVECTOR GENERATED ALWAYS AS(
@@ -31,7 +31,6 @@ CREATE TABLE IF NOT EXISTS card_sets(
         || SETWEIGHT(TO_TSVECTOR('english', ARRAY_TO_STRING(answers, ' ')), 'C')
     ) STORED
     ,created_on TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL
-    ,PRIMARY KEY (username, path)
 );
 
 CREATE TABLE IF NOT EXISTS user_favorites(

@@ -1,7 +1,6 @@
 import postgres from 'postgres'
 const sql = postgres()
 
-
 interface UserWithPass {
     username: string;
     email: string;

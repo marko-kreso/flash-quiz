@@ -48,10 +48,8 @@ export default defineEventHandler(async (event) => {
   const csrf = await generateRandomValue(48)
   const maxAge = stayLoggedIn ? 60*60*24*30*6 : undefined //6 months
   setCookie(event, 'session', session, {secure: true, httpOnly: true, maxAge: maxAge})
-  setCookie(event, 'username', username, {secure: true, httpOnly: true, maxAge: maxAge})
 
   // await client.set(session, username, {EX: stayLoggedIn ? 6000 : undefined})
-  // await client.set(username, session, {EX: stayLoggedIn ? 6000 : undefined})
   // await client.set(csrf, session, {EX: stayLoggedIn ? 6000 : undefined})
 
   setResponseStatus(event, 200)
@@ -59,5 +57,4 @@ export default defineEventHandler(async (event) => {
   return {
     csrf: csrf
   }
-  
 })
