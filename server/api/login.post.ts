@@ -1,15 +1,8 @@
 import * as argon2 from 'argon2'
-import sql from '../utils/db'
-import { getUser } from '../utils/query_sql'
+import sql, {UserWithPass} from '../utils/db'
+
 import generateRandomValue from '../utils/tools'
 
-interface User {
-    userName: string;
-    email: string;
-    banned: boolean;
-    createdOn: Date;
-    password: string;
-}
 
 // import client from '../utils/redis'
 export default defineEventHandler(async (event) => {
@@ -22,11 +15,10 @@ export default defineEventHandler(async (event) => {
     case 'local':
       username =body.credentials.username
       const {password} = body.credentials
-      const [user]: [User?] = await sql`
+      const [user]: [UserWithPass?] = await sql`
         SELECT * FROM users INNER JOIN passwords USING (user_name)
         WHERE user_name = ${username} OR email = ${username};
       `
-
       if(!user){
         setResponseStatus(event, 404)
         return
