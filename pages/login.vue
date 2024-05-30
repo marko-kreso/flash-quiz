@@ -9,7 +9,8 @@
       <template #login>
         <form action="/login" method="post" class="flex flex-col items-center gap-3" @submit="async (event)=>{
           event.preventDefault()
-          console.log(event?.target?.action)
+          const target = event.target as HTMLFormElement
+          console.log(target)
           const username=''
           $router.push(
             retUrl?.toString() ?? `/users/${username}`
@@ -25,7 +26,8 @@
       <template #Signup>
         <form action="/signup" method="post" class="flex flex-col items-center justify-evenly gap-3" @submit="async (event)=>{
           event.preventDefault()
-          console.log(event?.target?.action)
+          const target = event.target as HTMLFormElement
+          console.log(target.action)
           // fetch(event.target.action)
           const username = ''
           $router.push(
@@ -33,12 +35,13 @@
           )
         }">
           <input v-model.lazy="passwd" :class="'border border-black rounded-md p-1 w-80 '" name="password" placeholder="password" type="password" minlength="8" maxlength="20" required><br>
-          <input id="test" v-model.lazy="confPasswd" @change="(event)=>{
+          <input id="test" v-model.lazy="confPasswd" @change="event=>{
+            const target = event.target as HTMLInputElement
             if(passwd !== confPasswd){
-              event?.target?.setCustomValidity('Passwords do not match')
+              target.setCustomValidity('Passwords do not match')
               return
             }
-            event?.target?.setCustomValidity('')
+            target.setCustomValidity('')
           }" class="border border-black rounded-md p-1 w-80 " name="password" placeholder="confirm password" type="password" minlength="8" maxlength="20" required><br>
           <input class="border border-black rounded-md p-1 w-80 " name="email" placeholder="email" type="text" required><br>
           <input class="border border-black rounded-md p-1 w-80 " name="username" placeholder="username" type="text" required><br>
