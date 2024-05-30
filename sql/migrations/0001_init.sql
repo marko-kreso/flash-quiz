@@ -64,7 +64,10 @@ CREATE TABLE IF NOT EXISTS password_change_requests(
 -- +migrate Down
 DROP INDEX IF EXISTS favorite_idx;
 DROP TABLE IF EXISTS user_favorites;
+DROP INDEX IF EXISTS card_path_gist_idx;
 DROP TABLE IF EXISTS card_sets;
+DROP INDEX IF EXSITS folder_path_gist_idx;
+DROP TABLE IF EXISTS folders;
 DROP TABLE IF EXISTS social_users;
 DROP TABLE IF EXISTS passwords;
 DROP INDEX IF EXISTS email_idx;
