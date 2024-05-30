@@ -1,17 +1,16 @@
 import * as argon2 from "argon2"
 import sql, { User } from "../utils/db"
+import {z} from "zod"
 
 export default defineEventHandler(async (event) => {
-  const {
-    username,
-    password,
-    email,
-  }: {username: string, password: string, email: string} = await readBody(event)
+  const credSchema = z.object({
+    username: z.string().regex(/^['a-zA-Z0-9-']+$/g).max(32),
+    password: z.string().max(32).min(8),
+    email: z.string().email()
+  })
+  type signupRequest = z.infer<typeof credSchema>
+  const {username,password,email}:signupRequest =  await readValidatedBody(event, body=>credSchema.parse(body))
 
-  if(password.length < 8){
-    setResponseStatus(event, 400)
-    return
-  }
 
   await sql.begin(async (sql)=>{
       const [user]: [User?] = await sql`
@@ -35,6 +34,7 @@ export default defineEventHandler(async (event) => {
         INSERT INTO passwords (username, password)
         VALUES (${username}, ${newPassHash})
       `
+      await sql`INSERT INTO folders (path) VALUES ${username}`
   })
   setResponseStatus(event, 200)
 })

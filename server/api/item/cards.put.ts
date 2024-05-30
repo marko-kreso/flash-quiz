@@ -1,26 +1,18 @@
-import sql from "../utils/db"
+import sql from "../../utils/db"
 import {z} from "zod"
+import { pathSchema } from "../../utils/schemas"
 
 export default defineEventHandler(async (event) => {
-  const session = getCookie(event, 'session')
-  if(!session){
-    setResponseStatus(event, 401)
-    return
-  }
-  // redis get username associated with session
-  const username = "GET FROM REDIS"
-  if(username !== session){
-    setResponseStatus(event, 401)
-    return
-  }
+  const username = event.context.username
 
   const cardPutSchema = z.object({
-    path: z.string().max(256).startsWith(`/${username}`),
+    path: pathSchema(username),
     qa: z.array(z.object({
       question: z.string().max(256),
       answer: z.string().max(256)
     })).max(256)
   })
+
   type Request = z.infer<typeof cardPutSchema>
 
   const body: Request = await readValidatedBody(event, body => cardPutSchema.parse(body))
@@ -36,12 +28,13 @@ export default defineEventHandler(async (event) => {
   if(count !== 1){
     const {count: existsCount} = await sql`SELECT * FROM card_sets WHERE path = ${body.path}`
     if(existsCount > 0){
-      setResponseStatus(event, 401)
-      return
+      throw createError({
+        statusCode: 401
+      })
     }
-    setResponseStatus(event, 404)
-    return
+    throw createError({
+      statusCode: 404
+    })
   }
 
-  setResponseStatus(event, 200)
 })

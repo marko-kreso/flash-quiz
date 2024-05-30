@@ -10,6 +10,10 @@
         <form action="/login" method="post" class="flex flex-col items-center gap-3" @submit="async (event)=>{
           event.preventDefault()
           console.log(event?.target?.action)
+          const username=''
+          useRouter().push(
+            retUrl?.toString() ?? `/users/${username}`
+          )
         }">
           <input class="border border-black rounded-md p-1 w-80 " name="username" placeholder="email or username" type="text" required><br>
           <input class="border border-black rounded-md p-1 w-80 " name="password" placeholder="password" type="password" required><br>
@@ -23,6 +27,10 @@
           event.preventDefault()
           console.log(event?.target?.action)
           // fetch(event.target.action)
+          const username = ''
+          useRouter().push(
+            retUrl?.toString() ?? `/users/${username}`
+          )
         }">
           <input v-model.lazy="passwd" :class="'border border-black rounded-md p-1 w-80 '" name="password" placeholder="password" type="password" minlength="8" maxlength="20" required><br>
           <input id="test" v-model.lazy="confPasswd" @change="(event)=>{
