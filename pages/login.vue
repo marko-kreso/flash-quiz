@@ -11,7 +11,7 @@
           event.preventDefault()
           console.log(event?.target?.action)
           const username=''
-          useRouter().push(
+          $router.push(
             retUrl?.toString() ?? `/users/${username}`
           )
         }">
@@ -28,7 +28,7 @@
           console.log(event?.target?.action)
           // fetch(event.target.action)
           const username = ''
-          useRouter().push(
+          $router.push(
             retUrl?.toString() ?? `/users/${username}`
           )
         }">
