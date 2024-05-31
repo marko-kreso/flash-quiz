@@ -4,7 +4,7 @@
     </div>
     <!-- TODO: Move to its own component like index.vue -->
     <div v-else-if="data==='card'" class="h-full">
-      <CardList @loaded="(elements)=>items=elements" id="hello" :url="`/api/cards?path=${path}`" v-slot="slotprops" class="flex items-center h-full" >
+      <CardList @loaded="(elements)=>items=elements" id="hello" :url="`/api/item/cards?path=${path}`" v-slot="slotprops" class="flex items-center h-full" >
         <li v-if="!edit && currView == View.List" class="w-1/2">
           <QuizCard  class="mb-2 border-2 border-slate-400 rounded-md min-h-64">
             <template #front>{{slotprops.item.front}}</template>
@@ -43,7 +43,9 @@
       </CardList>
     </div>
     <div v-else-if="data==='folder'">
-      FOLDER PAGE
+      <CardList @loaded="(elements)=>elements" :url="`/api/item/folder?path=${path}`" v-slot="slotprops" class="flex items-center h-full" >
+          <div v-for="item in slotprops.items">{{ item }}</div>
+      </CardList>
     </div>
 </template>
 
