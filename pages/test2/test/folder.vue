@@ -18,6 +18,14 @@ const data = [
   {name:"folder2", isFolder: true, path: "/test"},
   {name:"item1", isFolder: false, path: "/test2"},
   {name:"item2", isFolder: false, path: "/test3/test5"},
+  {name:"folder1", isFolder: true, path: "/test"},
+  {name:"folder2", isFolder: true, path: "/test"},
+  {name:"item1", isFolder: false, path: "/test2"},
+  {name:"item2", isFolder: false, path: "/test3/test5"},
+  {name:"folder1", isFolder: true, path: "/test"},
+  {name:"folder2", isFolder: true, path: "/test"},
+  {name:"item1", isFolder: false, path: "/test2"},
+  {name:"item2", isFolder: false, path: "/test3/test5"},
   ]
 const iconSize = "2rem"
 const itemFontSize="2rem"

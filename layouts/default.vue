@@ -7,7 +7,7 @@
           </div>
           <div class="ml-32 flex gap-1 font-bold">
             <BreadCrumbs  class="ml-1" sep=">">
-              <BreadCrumb  v-for="path in crumbs"class="text-blue-600" :to="`/${path.path}`" :text="path.text"></BreadCrumb>
+              <BreadCrumb  v-for="path in crumbs()"class="text-blue-600" :to="`/${path.path}`" :text="path.text"></BreadCrumb>
             </BreadCrumbs>
             <!-- <div v-for="path,i in crumbs">
                 <NuxtLink  class="text-blue-600" :to="`/${path}`">{{ path }}</NuxtLink><span v-if="i!==crumbs.length-1" class="ml-1">></span>
@@ -32,15 +32,16 @@
         <div class="flex-1">
           <nav class="h-full flex flex-col bg-white">
             <ul class="flex flex-col flex-1">
-              <li  class="flex flex-col justify-center h-12"><IconListElement name="ph:sign-in-duotone" text="Login/Sign up"/></li>
+              <NuxtLink  :to="`/login?returnUrl=${encodeURIComponent($route.path.toString())}`"><li  class="flex flex-col justify-center h-12"><IconListElement name="ph:sign-in-duotone" text="Login/Sign up"/></li></NuxtLink>
               <!-- <li class="flex flex-row align-center justify-evenly mb-1"><button class="rounded-md bg-blue-400 px-3 py-2">Log in</button> <button class="rounded-md bg-orange-400 px-3 py-2">Sign up</button></li> -->
               <li v-if="loggedIn" class="flex flex-col justify-center h-12"><IconListElement name="ph:stack-duotone" text="Collection"/></li>
               <li class="flex flex-col justify-center h-12"><IconListElement name="ph:globe-simple-duotone" text="Explore"/></li>
             </ul>
             <ul class="flex flex-col justify-end flex-1">
-              <li class="flex flex-col justify-center h-12"><IconListElement name="ph:question-duotone" text="About"/></li>
-              <li v-if="loggedIn" class="flex flex-col justify-center h-12"><IconListElement name="ph:user-circle-duotone" text="Profile"/></li>
-              <li v-if="loggedIn" class="flex flex-col justify-center h-12"><IconListElement name="ph:signpost-duotone" text="Logout"/></li>
+              <NuxtLink to="/about"><li class="flex flex-col justify-center h-12"><IconListElement name="ph:question-duotone" text="About"/></li></NuxtLink>
+              <NuxtLink to="/profile"><li v-if="loggedIn" class="flex flex-col justify-center h-12"><IconListElement name="ph:user-circle-duotone" text="Profile"/></li></NuxtLink>
+              <NuxtLink @click="()=>{
+              }"> <li v-if="loggedIn" class="flex flex-col justify-center h-12"><IconListElement name="ph:signpost-duotone" text="Logout"/></li></NuxtLink>
             </ul>
           </nav>
         </div>
@@ -52,6 +53,7 @@
     </main>
 </template>
 <script setup lang="ts">
+import {useRoute as useNativeRoute } from 'vue-router'
 
 const loggedIn = useCookie('session')
 const edit = useState('edit', ()=>false)
@@ -71,14 +73,15 @@ const viewMap: Map<View, string> = new Map([
 ])
 const mapKeys: ComputedRef<string[]> = computed(()=>[...viewMap.keys()].map((k)=>k.toString()))
 const layoutIcon = computed(()=>viewMap.get(activeView.value))
-const crumbs = computed(()=>useRoute().path.split('/').slice(1).map((e,i,arr)=>{
+
+const crumbs = ()=>useNativeRoute().path.split('/').slice(1).map((e,i,arr)=>{
   let path = e
   for(let j = i-1; j >= 0; j--){
     path = arr[j] + '/' + path
   }
   return {text: e, path:path}
-}))
-console.log(crumbs.value)
+})
+console.log(crumbs())
 </script>
 <style>
   .edit:hover{
