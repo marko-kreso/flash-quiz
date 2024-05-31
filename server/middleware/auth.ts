@@ -17,6 +17,7 @@ export default defineEventHandler(async (event) => {
   // redis get username associated with session
   const username = "GET FROM REDIS"
   event.context.username = username
+  event.context.session = session
 
     // if(!session && event.path.startsWith('/api') && !authWhitelist.has(event.path)){
     //     sendRedirect(event, '/login')
