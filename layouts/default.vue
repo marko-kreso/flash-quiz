@@ -1,8 +1,23 @@
 <template>
   <main class="flex-col flex h-screen">
     <div class="h-16 sticky z-10 w-full top-0 flex-shrink-0 border-b flex flex-row items-center bg-white">
-        <span class="text-blue-600 text-4xl pl-2">Test</span>
-        <div class="flex flex-1 flex-row justify-end">
+        <div class="flex flex-1 flex-row text-2xl items-center">
+          <div>
+            <span class="text-blue-600 text-4xl pl-2">Test</span>
+          </div>
+          <div class="ml-32 flex gap-1 font-bold">
+            <BreadCrumbs  class="ml-1" sep=">>">
+              <BreadCrumb  v-for="path in crumbs"class="text-blue-600" :to="`/${path}`" :text="path"></BreadCrumb>
+              <BreadCrumb class="text-blue-600" :to="`/hello`" text="hello"></BreadCrumb>
+              <BreadCrumb class="text-blue-600" :to="`/hello2`" text="hello2"></BreadCrumb>
+              <BreadCrumb class="text-blue-600" :to="`/hello3`" text="hello2"></BreadCrumb>
+            </BreadCrumbs>
+            <!-- <div v-for="path,i in crumbs">
+                <NuxtLink  class="text-blue-600" :to="`/${path}`">{{ path }}</NuxtLink><span v-if="i!==crumbs.length-1" class="ml-1">></span>
+            </div> -->
+          </div>
+        </div>
+        <div class="flex flex-1 flex-row justify-end items-center">
           <DropDown :selected="true" v-if="!edit" :elements="mapKeys" v-model="activeView">
             <template #toggler>
               <button  :class="['border', 'border-black', 'p-2', 'mr-3', 'rounded-md', ...buttonProperties]">
@@ -59,7 +74,7 @@ const viewMap: Map<View, string> = new Map([
 ])
 const mapKeys: ComputedRef<string[]> = computed(()=>[...viewMap.keys()].map((k)=>k.toString()))
 const layoutIcon = computed(()=>viewMap.get(activeView.value))
-
+const crumbs = computed(()=>useRoute().path.split('/').slice(1))
 </script>
 <style>
   .edit:hover{
