@@ -6,11 +6,8 @@
             <span class="text-blue-600 text-4xl pl-2">Test</span>
           </div>
           <div class="ml-32 flex gap-1 font-bold">
-            <BreadCrumbs  class="ml-1" sep=">>">
-              <BreadCrumb  v-for="path in crumbs"class="text-blue-600" :to="`/${path}`" :text="path"></BreadCrumb>
-              <BreadCrumb class="text-blue-600" :to="`/hello`" text="hello"></BreadCrumb>
-              <BreadCrumb class="text-blue-600" :to="`/hello2`" text="hello2"></BreadCrumb>
-              <BreadCrumb class="text-blue-600" :to="`/hello3`" text="hello2"></BreadCrumb>
+            <BreadCrumbs  class="ml-1" sep=">">
+              <BreadCrumb  v-for="path in crumbs"class="text-blue-600" :to="`/${path.path}`" :text="path.text"></BreadCrumb>
             </BreadCrumbs>
             <!-- <div v-for="path,i in crumbs">
                 <NuxtLink  class="text-blue-600" :to="`/${path}`">{{ path }}</NuxtLink><span v-if="i!==crumbs.length-1" class="ml-1">></span>
@@ -74,7 +71,14 @@ const viewMap: Map<View, string> = new Map([
 ])
 const mapKeys: ComputedRef<string[]> = computed(()=>[...viewMap.keys()].map((k)=>k.toString()))
 const layoutIcon = computed(()=>viewMap.get(activeView.value))
-const crumbs = computed(()=>useRoute().path.split('/').slice(1))
+const crumbs = computed(()=>useRoute().path.split('/').slice(1).map((e,i,arr)=>{
+  let path = e
+  for(let j = i-1; j >= 0; j--){
+    path = arr[j] + '/' + path
+  }
+  return {text: e, path:path}
+}))
+console.log(crumbs.value)
 </script>
 <style>
   .edit:hover{
