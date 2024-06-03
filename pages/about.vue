@@ -4,9 +4,9 @@
       <h1>About</h1>
     </div>
     <p>
-    GigaQuiz seeks to be a better alternative to Quizlet and its name reflects that, which is why GigaQuiz's name is prefixed with "Giga" like in the word Gigachad whereas Quizlet's is suffixed with "let" in manlet.
+    GigaQuiz seeks to be a better alternative to Quizlet and its name reflects that, which is why GigaQuiz's name is prefixed with "Giga" like in the word Gigachad whereas Quizlet's is suffixed with "let" like in manlet.
     GigaQuiz was created because I wanted to create a free and performant alternative to Quizlet. 
-    I found Quizlet too be painfully slow, and wanted a soydev free version of it.
+    I found Quizlet too be painfully slow, and wanted simple version of it.
     GigaQuiz is being developed solo and on my free time.
     I hope that this website can serve as a tool to help others study and am open to feedback. I would prefer to keep the site
     ad-free if possible.
@@ -110,5 +110,8 @@ h2{
 h3{
   font-weight: bold;
   font-size: large;
+}
+main{
+  background-image: none;
 }
 </style>
