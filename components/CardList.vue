@@ -10,7 +10,7 @@
   const props = defineProps(['url'])
 
   
-  const items = ref<{front: String, back:String}[]>([])
+  const items = ref<any[]>([])
 
   // const {data, pending, error, refresh} = await useFetch(props.url!,{
 
@@ -25,30 +25,48 @@
 
   onMounted(()=>{
     setTimeout(()=>{
-      items.value=[{front: 'question 1', back: 'answer1'},
-      {front: 'question 2', back: 'answer 2'},
-       {front: 'question 1', back: 'answer1'},
-       {front: 'question 2', back: 'answer 2'},
-      {front: 'question 2', back: 'answer 2'},
-       {front: 'question 1', back: 'answer1'},
-       {front: 'question 2', back: 'answer 2'},
-      {front: 'question 2', back: 'answer 2'},
-       {front: 'question 1', back: 'answer1'},
-       {front: 'question 2', back: 'answer 2'},
-      {front: 'question 2', back: 'answer 2'},
-       {front: 'question 1', back: 'answer1'},
-       {front: 'question 2', back: 'answer 2'},
-      {front: 'question 2', back: 'answer 2'},
-       {front: 'question 1', back: 'answer1'},
-       {front: 'question 2', back: 'answer 2'},
-      {front: 'question 2', back: 'answer 2'},
-       {front: 'question 1', back: 'answer1'},
-       {front: 'question 2', back: 'answer 2'},
-       {front: 'question 2', back: 'answer 2'},
-      {front: 'question 2', back: 'answer 2'},
-       {front: 'question 1', back: 'answer1'},
-       {front: 'question 2', back: 'answer 2'},
+    //   items.value=[
+    //     {front: 'question 1', back: 'answer1'},
+    //   {front: 'question 2', back: 'answer 2'},
+    //    {front: 'question 1', back: 'answer1'},
+    //    {front: 'question 2', back: 'answer 2'},
+    //   {front: 'question 2', back: 'answer 2'},
+    //    {front: 'question 1', back: 'answer1'},
+    //    {front: 'question 2', back: 'answer 2'},
+    //   {front: 'question 2', back: 'answer 2'},
+    //    {front: 'question 1', back: 'answer1'},
+    //    {front: 'question 2', back: 'answer 2'},
+    //   {front: 'question 2', back: 'answer 2'},
+    //    {front: 'question 1', back: 'answer1'},
+    //    {front: 'question 2', back: 'answer 2'},
+    //   {front: 'question 2', back: 'answer 2'},
+    //    {front: 'question 1', back: 'answer1'},
+    //    {front: 'question 2', back: 'answer 2'},
+    //   {front: 'question 2', back: 'answer 2'},
+    //    {front: 'question 1', back: 'answer1'},
+    //    {front: 'question 2', back: 'answer 2'},
+    //    {front: 'question 2', back: 'answer 2'},
+    //   {front: 'question 2', back: 'answer 2'},
+    //    {front: 'question 1', back: 'answer1'},
+    //    {front: 'question 2', back: 'answer 2'},
     
+    // ]
+    items.value=[
+      {
+      question: "How old are you?", 
+      answers:["correct", "incorrect"],
+      correctAnswers:["correct"]
+      },
+      {
+      question: "How old are you?", 
+      answers:["correct", "incorrect", "incorrect2"],
+      correctAnswers:["correct"]
+      },
+      {
+      question: "How old are you?", 
+      answers:["correct", "incorrect", "incorrect2", "correct2"],
+      correctAnswers:["correct", "correct2"]
+      },
     ]
     emit('loaded', items.value)
     }, 1000)
