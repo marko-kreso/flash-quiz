@@ -30,15 +30,21 @@ services:
         build:
             context: .
             dockerfile_inline: |
-                FROM node:lts-alpine
+                FROM node:lts-alpine AS base
                 COPY package.json /quiz/
                 WORKDIR /quiz
                 RUN npm i
                 COPY . /quiz 
-                RUN npm run dev
-                # RUN npm run build 
-                # CMD ["node", "/quiz/.output/server/index.mjs"]
 
+                FROM base AS quiz-prod
+                CMD ["npm", "run", "dev"]
+
+                FROM base AS quiz-dev
+                RUN npm run build 
+                CMD ["node", "/quiz/.output/server/index.mjs"]
+
+                FROM quiz-${BUILD:?BUILD must be either 'dev' or 'prod'}
+                RUN echo "BUILD ${BUILD}"
         ports:
             - 80:3000
         develop:
@@ -48,6 +54,12 @@ services:
                   target: /quiz/
                 - action: rebuild
                   path: ./package.json
+networks:
+    default:
+        ipam:
+            driver: default
+            config:
+                - subnet: "192.168.100.0/24"
 
 volumes:
     fast-quiz:
