@@ -1,0 +1,5 @@
+production:
+  dialect: postgres
+  datasource: ${POSTGRES_CONNECTION}
+  dir: migrations/postgres
+  table: migrations

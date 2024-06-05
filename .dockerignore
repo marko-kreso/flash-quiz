@@ -16,11 +16,7 @@ logs
 # Misc
 .DS_Store
 
-# Local env files
-.env
-.env.*
-!.env.example
-query_sql.ts
+.git
 
-redis/
+redis
 postgresql
