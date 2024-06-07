@@ -27,6 +27,7 @@
         <form action="/signup" method="post" class="flex flex-col items-center justify-evenly gap-3" @submit="async (event)=>{
           event.preventDefault()
           const target = event.target as HTMLFormElement
+          
           console.log(target.action)
           // fetch(event.target.action)
           const username = ''
@@ -34,36 +35,42 @@
             retUrl?.toString() ?? `/users/${username}`
           )
         }">
-          <input v-model="passwd" :class="`border rounded-md p-1 w-80 ${passColor}`" name="password" placeholder="password" type="password" minlength="8" maxlength="20" required 
-          @input="event=>{
+          <input ref="pass" v-model="passwd" class="border border-black rounded-md p-1 w-80 pass" name="password" placeholder="password" type="password" minlength="8" maxlength="20" required 
+          @input="()=>{
             console.log(passMatch, passwd, confPasswd)
             if(passMatch === undefined){
               return
             }
-            const target = event.target as HTMLInputElement
             if(passwd !== confPasswd){
-              target.setCustomValidity('Passwords do not match')
+              passes.forEach((target )=>{
+                target?.setCustomValidity('Passwords do not match')
+              })
               passMatch = false
               return
             }
             passMatch = true
-            target.setCustomValidity('')
+            passes.forEach((target )=>{
+              target?.setCustomValidity('')
+            })
 
           }"><br>
-          <input id="test" v-model="confPasswd" @input="event=>{
+          <input ref="confPass" id="test" v-model="confPasswd" @input="event=>{
             if(confPasswd.length < 8){
               return
             }
-            const target = event.target as HTMLInputElement
             if(passwd !== confPasswd){
-              target.setCustomValidity('Passwords do not match')
+              passes.forEach((target )=>{
+                target?.setCustomValidity('Passwords do not match')
+              })
               passMatch = false
               return
             }
             passMatch = true
-            target.setCustomValidity('')
-          }" :class="`border rounded-md p-1 w-80 ${passColor}`" name="password" placeholder="confirm password" type="password" minlength="8" maxlength="20" required><br>
-          <input class="border border-black rounded-md p-1 w-80 " name="email" placeholder="email" type="text" required><br>
+            passes.forEach((target )=>{
+              target?.setCustomValidity('')
+            })
+          }" class="border border-black rounded-md p-1 w-80 pass" name="password" placeholder="confirm password" type="password" minlength="8" maxlength="20" required><br>
+          <input class="border border-black rounded-md p-1 w-80 " name="email" placeholder="email" type="email" required><br>
           <input class="border border-black rounded-md p-1 w-80 " name="username" placeholder="username" type="text" required><br>
           <div class="flex flex-row justify-evenly w-full">
             <button class="px-2 py-1 bg-blue-400 rounded-md text-white">Submit</button> 
@@ -88,6 +95,10 @@
   // })
   const retUrl = ref(useRoute().query.returnUrl)
   const passMatch: globalThis.Ref<boolean | undefined> = ref(undefined)
+  const pass: globalThis.Ref<HTMLInputElement | undefined> = ref(undefined)
+  const confPass: globalThis.Ref<HTMLInputElement | undefined> = ref(undefined)
+  const passes = computed(()=>[pass.value,confPass.value])
+
   const passColor = computed(()=>{
     switch(passMatch.value){
       case undefined:
@@ -127,5 +138,13 @@
 <style>
 .loginCard{
   box-shadow: rgba(0, 0, 0, 0.25) 0px 14px 28px, rgba(0, 0, 0, 0.22) 0px 10px 10px;
+}
+.pass:valid{
+  border-color: green;
+  border-width: 2px;
+}
+.pass:invalid{
+  border-color: red;
+  border-width: 2px;
 }
 </style>
