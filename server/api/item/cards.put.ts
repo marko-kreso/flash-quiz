@@ -10,7 +10,7 @@ export default defineEventHandler(async (event) => {
     qa: z.array(z.object({
       question: z.string().max(256),
       answer: z.string().max(256)
-    })).max(256)
+    })).max(256).min(1)
   })
 
   type Request = z.infer<typeof cardPutSchema>

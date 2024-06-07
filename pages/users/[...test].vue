@@ -2,7 +2,7 @@
   <div v-if="pending">
     <NuxtLayout name="default">
       <div class="w-full h-full flex flex-col justify-center items-center">
-        <LoadingSpinner></LoadingSpinner>
+        <LoadingSpinner :width="'30vw'" :height="'30vw'"></LoadingSpinner>
       </div>
     </NuxtLayout>
   </div>
@@ -21,7 +21,7 @@
 // const {data, pending, error, refresh} = await useLazyFetch(`/api/cards/verifyPath?path=${path}`)
 const data = ref('')
 const pending = ref(true)
-setTimeout(()=>{data.value='quiz'; pending.value=false}, 1000)
+setTimeout(()=>{data.value='card'; pending.value=false}, 1000)
 
 definePageMeta({
 layout: false,

@@ -165,6 +165,17 @@ watch(items, ()=>{
 })
 
 watch(currIndex, ()=>{console.log(currIndex)})
+
+function SaveState(){
+  const {data, error} = useFetch('/api/item/cards',{
+    method: "PUT",
+    body: {
+      path: path,
+      
+    }
+  })
+}
+
 </script>
 
 <style>
