@@ -1,7 +1,6 @@
 <template>
-  <div @click="()=>{isFlipped=!isFlipped}" class="frontToBack" :style="{
+  <div @click="()=>{isFlipped=!isFlipped}" class="frontToBack card-color" :style="{
     transform: `rotateX(${isFlipped ? 180 : 0}deg)`,
-    backgroundColor: 'white',
   }">
     <div style="display: inline-block; backface-visibility: hidden; transform-style: preserve-3d;">
       <slot name="front">Question</slot>

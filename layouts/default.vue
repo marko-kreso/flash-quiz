@@ -38,4 +38,7 @@
 const session = useCookie('session')
 </script>
 <style>
+.card-color{
+  @apply bg-white
+}
 </style>

@@ -1,4 +1,6 @@
 <template>
+  <div class="bg-white">
+
   <div class="flex flex-col w-1/2 justify-center">
     <div class="flex flex-row justify-center">
       <h1>About</h1>
@@ -93,12 +95,13 @@
       </ol>
 
   </div>
+  </div>
 </template>
 
 <script lang="ts" setup>
 </script>
 
-<style>
+<style scoped>
 h1{
   font-weight: bold;
   font-size: x-large;
@@ -110,8 +113,5 @@ h2{
 h3{
   font-weight: bold;
   font-size: large;
-}
-main{
-  background-image: none;
 }
 </style>

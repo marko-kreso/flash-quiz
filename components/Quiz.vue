@@ -28,12 +28,16 @@
 
       <template #default>
       <div class="h-full">
-        <CardList @loaded="(elements)=>items=elements" id="hello" :url="`/api/item/cards?path=${path}`" v-slot="slotprops" class="flex items-center h-full" >
+        <CardList @loaded="(elements)=>{
+          items=elements
+          elements.forEach(()=>selectedAnswers.push([]))
+        }" id="hello" :url="`/api/item/cards?path=${path}`" v-slot="slotprops" class="flex items-center h-full" >
           <li v-if="!edit && activeView == View.List" class="w-1/2">
             <QuizCard  
               :correctAnswers="slotprops.item.correctAnswers" 
               :answers="slotprops.item.answers" 
               :question="slotprops.item.question" 
+              v-model="selectedAnswers[slotprops.i]"
               class="mb-2 border-2 border-slate-400 rounded-md min-h-64"></QuizCard>
           </li>
           <li v-if="!edit && activeView == View.SideBySide" class="w-3/4">
@@ -50,9 +54,10 @@
               </div>
             </div>
           </li>
-          <li :class="`w-1/2 h-full flex flex-col justify-center ${!edit && activeView == View.Carousel && currIndex == slotprops.i ? '' : 'hidden'}`">
+          <li class="w-1/2 h-full flex flex-col justify-center" v-if="!edit && activeView == View.Carousel && currIndex == slotprops.i">
             <div>
             <QuizCard  
+              v-model="selectedAnswers[slotprops.i]"
               :correctAnswers="slotprops.item.correctAnswers" 
               :answers="slotprops.item.answers" 
               :question="slotprops.item.question" 
@@ -128,6 +133,7 @@ const viewMap: Map<View, string> = new Map([
 const carouselIconSizes="2em"
 
 const items: Ref<{front: String, back:String}[]|null> = ref(null)
+const selectedAnswers:never[][] = reactive([])
 const currIndex = ref(0)
 
 let keyLock = 0
