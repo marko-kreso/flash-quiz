@@ -45,6 +45,9 @@
             <div class="border-2 border-slate-400 rounded-md min-h-64 flex-1 bg-white">
                 <div>
                   {{ slotprops.item.question }}
+                  <div v-for="answer in slotprops.item.answers" class="m-2">
+                    {{ answer }}
+                  </div>
                 </div>
               </div>
               <div class="border-2 border-slate-400 rounded-md min-h-64 flex-1 flex-col justify-evenly flex bg-white">
