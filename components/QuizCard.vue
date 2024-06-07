@@ -31,21 +31,8 @@ const props = defineProps<{
 
 const selectedAnswers: Ref<Set<string>> = ref(new Set())
 const correctAnswers = new Set(props.correctAnswers)
-const revealAnswer = computed(()=>{
-  let totalCorrect = 0
-  console.log('hello')
-  for(const selectedAnswer of selectedAnswers.value){
-    if(correctAnswers.has(selectedAnswer)){
-      totalCorrect++
-    }else{
-      return true
-    }
-  }
-  console.log(totalCorrect)
-  console.log('hello')
-
-  return totalCorrect === correctAnswers.size ? true : false
-})
+// Will need a submit for these add a select 3?
+const revealAnswer = computed(()=>selectedAnswers.value.size === correctAnswers.size)
 watch(revealAnswer, (val)=>{
   console.log(val)
 })
