@@ -34,15 +34,35 @@
             retUrl?.toString() ?? `/users/${username}`
           )
         }">
-          <input v-model.lazy="passwd" :class="'border border-black rounded-md p-1 w-80 '" name="password" placeholder="password" type="password" minlength="8" maxlength="20" required><br>
-          <input id="test" v-model.lazy="confPasswd" @change="event=>{
+          <input v-model="passwd" :class="`border rounded-md p-1 w-80 ${passColor}`" name="password" placeholder="password" type="password" minlength="8" maxlength="20" required 
+          @input="event=>{
+            console.log(passMatch, passwd, confPasswd)
+            if(passMatch === undefined){
+              return
+            }
             const target = event.target as HTMLInputElement
             if(passwd !== confPasswd){
               target.setCustomValidity('Passwords do not match')
+              passMatch = false
               return
             }
+            passMatch = true
             target.setCustomValidity('')
-          }" class="border border-black rounded-md p-1 w-80 " name="password" placeholder="confirm password" type="password" minlength="8" maxlength="20" required><br>
+
+          }"><br>
+          <input id="test" v-model="confPasswd" @input="event=>{
+            if(confPasswd.length < 8){
+              return
+            }
+            const target = event.target as HTMLInputElement
+            if(passwd !== confPasswd){
+              target.setCustomValidity('Passwords do not match')
+              passMatch = false
+              return
+            }
+            passMatch = true
+            target.setCustomValidity('')
+          }" :class="`border rounded-md p-1 w-80 ${passColor}`" name="password" placeholder="confirm password" type="password" minlength="8" maxlength="20" required><br>
           <input class="border border-black rounded-md p-1 w-80 " name="email" placeholder="email" type="text" required><br>
           <input class="border border-black rounded-md p-1 w-80 " name="username" placeholder="username" type="text" required><br>
           <div class="flex flex-row justify-evenly w-full">
@@ -67,6 +87,17 @@
   //   return passMatch ? 'border-green' : 'border-black'
   // })
   const retUrl = ref(useRoute().query.returnUrl)
+  const passMatch: globalThis.Ref<boolean | undefined> = ref(undefined)
+  const passColor = computed(()=>{
+    switch(passMatch.value){
+      case undefined:
+        return 'border-black'
+      case true:
+        return 'border-green-600'
+      case false:
+        return 'border-red-600'
+    }
+  })
 
 
   // watch(passMatch, (newVal)=>{
