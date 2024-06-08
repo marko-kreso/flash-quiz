@@ -38,11 +38,11 @@ services:
                 COPY . /quiz 
 
                 FROM base AS quiz-prod
-                CMD ["npm", "run", "dev"]
-
-                FROM base AS quiz-dev
                 RUN npm run build 
                 CMD ["node", "/quiz/.output/server/index.mjs"]
+
+                FROM base AS quiz-dev
+                CMD ["npm", "run", "dev"]
 
                 FROM quiz-${BUILD:?BUILD must be either 'dev' or 'prod'}
                 RUN echo "BUILD ${BUILD}"
@@ -61,7 +61,7 @@ networks:
         ipam:
             driver: default
             config:
-                - subnet: "192.168.100.0/24"
+                - subnet: "192.168.200.0/24"
 
 volumes:
     fast-quiz:
