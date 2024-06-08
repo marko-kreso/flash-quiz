@@ -3,6 +3,7 @@ import sql, { User } from "../utils/db"
 import {z} from "zod"
 
 export default defineEventHandler(async (event) => {
+  console.log("POSTING")
   const credSchema = z.object({
     username: z.string().regex(/^['a-zA-Z0-9-']+$/g).max(32),
     password: z.string().max(32).min(8),
@@ -10,9 +11,12 @@ export default defineEventHandler(async (event) => {
   })
   type signupRequest = z.infer<typeof credSchema>
   const {username,password,email}:signupRequest =  await readValidatedBody(event, body=>credSchema.parse(body))
+  console.log(username,password,email)
+
 
 
   await sql.begin(async (sql)=>{
+      console.log('hello')
       const [user]: [User?] = await sql`
         SELECT * FROM users 
         WHERE username = ${username} OR email = ${email};
@@ -21,6 +25,7 @@ export default defineEventHandler(async (event) => {
         setResponseStatus(event, 409)
         throw new Error("409 occured")
       }
+      console.log('hello')
       await sql`
         INSERT INTO users (username, email) 
         VALUES (${username}, ${email})
@@ -34,7 +39,9 @@ export default defineEventHandler(async (event) => {
         INSERT INTO passwords (username, password)
         VALUES (${username}, ${newPassHash})
       `
-      await sql`INSERT INTO folders (path) VALUES ${username}`
+      await sql`INSERT INTO folders (path) VALUES (${username})`
   })
+
+  
   setResponseStatus(event, 200)
 })

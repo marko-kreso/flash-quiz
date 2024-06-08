@@ -1,13 +1,19 @@
 
-const authWhitelist = new Set(['/api/login', '/api/resetPassword'])
+const authWhitelist = new Set(['/api/login', '/api/resetPassword', '/api/signup'])
 
 
 // import redisClient from "../utils/redis"
 export default defineEventHandler(async (event) => {
+  console.log(event.path)
   const session = getCookie(event, 'session')
+
   if(event.node.req.method === 'GET'){
     return
   }
+  if(authWhitelist.has(event.path)){
+    return
+  }
+
   if(!session){
     throw createError({
       statusCode: 401

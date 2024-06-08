@@ -1,5 +1,9 @@
 import postgres from 'postgres'
-const sql = postgres()
+
+if(!process.env.POSTGRES_CONNECTION){
+    throw Error("POSTGRES_CONNECTION NOT SPECIFIED")
+}
+const sql = postgres(process.env.POSTGRES_CONNECTION)
 
 interface UserWithPass {
     username: string;

@@ -1,7 +1,7 @@
 <template>
   <main class="h-dvh">
     <div class="absolute top-1/2 left-1/3 text-8xl -translate-y-1/2 -translate-x-1/2">
-      <span class="text-blue-600">test</span>setup
+      <span class="text-blue-600">Giga</span>Quiz
     </div>
     <div class="bg-white absolute top-1/2 left-2/3 p-3 border loginCard rounded-md -translate-y-1/2 -translate-x-1/2">
       <TabView :tabs="[{name: 'login', text:'Login'}, {name: 'Signup', text: 'Sign up'}]">
@@ -10,7 +10,7 @@
         <form action="/login" method="post" class="flex flex-col items-center gap-3" @submit="async (event)=>{
           event.preventDefault()
           const target = event.target as HTMLFormElement
-          console.log(target)
+
           const username=''
           $router.push(
             retUrl?.toString() ?? `/users/${username}`
@@ -29,10 +29,16 @@
           const target = event.target as HTMLFormElement
           console.log(target.action)
           // fetch(event.target.action)
-          const username = ''
-          $router.push(
-            retUrl?.toString() ?? `/users/${username}`
-          )
+          console.log('start')
+
+          const resp = contactSignup()
+          console.log(resp)
+
+
+          // $router.push(
+          //   retUrl?.toString() ?? `/users/${signUpUsername}`
+          // )
+          
         }">
           <input v-model.lazy="passwd" :class="'border border-black rounded-md p-1 w-80 '" name="password" placeholder="password" type="password" minlength="8" maxlength="20" required><br>
           <input id="test" v-model.lazy="confPasswd" @change="event=>{
@@ -43,8 +49,8 @@
             }
             target.setCustomValidity('')
           }" class="border border-black rounded-md p-1 w-80 " name="password" placeholder="confirm password" type="password" minlength="8" maxlength="20" required><br>
-          <input class="border border-black rounded-md p-1 w-80 " name="email" placeholder="email" type="text" required><br>
-          <input class="border border-black rounded-md p-1 w-80 " name="username" placeholder="username" type="text" required><br>
+          <input v-model="signUpEmail" class="border border-black rounded-md p-1 w-80 " name="email" placeholder="email" type="text" required><br>
+          <input v-model="signUpUsername"class="border border-black rounded-md p-1 w-80 " name="username" placeholder="username" type="text" required><br>
           <div class="flex flex-row justify-evenly w-full">
             <button class="px-2 py-1 bg-blue-400 rounded-md text-white">Submit</button> 
           </div>
@@ -59,6 +65,8 @@
 
   const passwd=ref("")
   const confPasswd = ref("")
+  const signUpUsername = ref("")
+  const signUpEmail = ref("")
   // const passMatch:globalThis.Ref<null | boolean> = ref(null)
   // const borderColor = computed(()=>{
   //   if(passMatch === null){
@@ -87,6 +95,16 @@
 
   // })
 
+  async function contactSignup(){
+    return await $fetch('/api/signup',{
+      method: 'POST',
+      body:{
+        username: signUpUsername.value,
+        email: signUpEmail.value,
+        password: passwd.value
+      },
+    })
+  }
 
   definePageMeta({
     layout: 'blank'
