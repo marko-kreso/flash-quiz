@@ -31,7 +31,8 @@ services:
             context: .
             dockerfile_inline: |
                 FROM node:lts-alpine AS base
-                COPY package.json /quiz/
+                COPY package.json package-lock.json /quiz/
+                RUN echo /quiz/
                 WORKDIR /quiz
                 RUN npm i
                 COPY . /quiz 
@@ -46,7 +47,7 @@ services:
                 FROM quiz-${BUILD:?BUILD must be either 'dev' or 'prod'}
                 RUN echo "BUILD ${BUILD}"
         ports:
-            - 80:3000
+            - 3000:3000
         develop:
             watch:
                 - action: sync
@@ -56,6 +57,7 @@ services:
                   path: ./package.json
 networks:
     default:
+        name: test
         ipam:
             driver: default
             config:
