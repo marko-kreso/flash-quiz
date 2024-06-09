@@ -28,7 +28,7 @@
 
       <template #default>
       <div class="h-full">
-        <CardList @loaded="(elements)=>items=elements" id="hello" :url="`/api/item/cards?path=${path}`" v-slot="slotprops" class="flex items-center h-full" >
+        <CardList v-model="items" id="hello" :url="`/api/item/cards?path=${path}`" v-slot="slotprops" class="flex items-center h-full" >
           <li v-if="!edit && activeView == View.List" class="w-1/2">
             <QuizCard  
               :correctAnswers="slotprops.item.correctAnswers" 
@@ -71,11 +71,17 @@
               </div>
             </div>
           </li>
-          <li v-if="edit" class="w-3/4">
-            <div class="flex flex-row justify-center mb-2 space-x-2">
-              <div class="border-2 border-slate-400 rounded-md min-h-64 flex-1 bg-white" contenteditable="true">{{slotprops.item.front}}</div>
+          <li v-if="edit" class="w-3/4 flex flex-col">
+            <button v-if="slotprops.i === 0" class="bg-blue-200 rounded-md" @click="items.splice(0,0,{front:'ooga', back:''})"><Icon name="ph:plus-circle-duotone" size="50px"></Icon></button>
+            <div class="flex flex-row justify-center space-x-2">
+              <Editor v-model="items[slotprops.i]" v-once class="border-2 border-slate-400 rounded-md min-h-64 flex-1 bg-white" contenteditable="true" @input="(event)=>{
+                // const target = event.target as HTMLInputElement
+                // items[slotprops.i].front = target.textContent ?? ''
+                // console.log(items[slotprops.i].front)
+              }"></Editor>
               <div class="border-2 border-slate-400 rounded-md min-h-64 flex-1 bg-white" contenteditable="true">{{slotprops.item.back}}</div>
             </div>
+            <button @click="items = items.toSpliced(slotprops.i+1, 0,{front:'booga', back:''})" class="bg-blue-200 rounded-md" ><Icon name="ph:plus-circle-duotone" size="50px"></Icon></button>
           </li>
         </CardList>
       </div>
@@ -95,7 +101,7 @@ enum View{
   Carousel = "Carousel",
 }
 
-const edit = ref(false)
+const edit = ref(true)
 const props = defineProps({
   session: String
 })
@@ -127,7 +133,7 @@ const viewMap: Map<View, string> = new Map([
 
 const carouselIconSizes="2em"
 
-const items: Ref<{front: String, back:String}[]|null> = ref(null)
+const items  = ref<{front: String, back:String}[]>([])
 const currIndex = ref(0)
 
 let keyLock = 0

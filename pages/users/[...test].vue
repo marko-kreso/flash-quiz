@@ -21,7 +21,7 @@
 // const {data, pending, error, refresh} = await useLazyFetch(`/api/cards/verifyPath?path=${path}`)
 const data = ref('')
 const pending = ref(true)
-setTimeout(()=>{data.value='quiz'; pending.value=false}, 1000)
+setTimeout(()=>{data.value='card'; pending.value=false}, 1000)
 
 definePageMeta({
 layout: false,

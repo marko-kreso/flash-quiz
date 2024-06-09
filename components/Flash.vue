@@ -28,12 +28,12 @@
 
       <template #default>
       <div class="h-full">
-        <CardList @loaded="(elements)=>items=elements" id="hello" :url="`/api/item/cards?path=${path}`" v-slot="slotprops" class="flex items-center h-full" >
+        <CardList v-model="items" id="hello" :url="`/api/item/cards?path=${path}`" v-slot="slotprops" class="flex items-center h-full" >
           <li v-if="!edit && activeView == View.List" class="w-1/2">
-            <QuizCard  class="mb-2 border-2 border-slate-400 rounded-md min-h-64">
+            <FlashCard  class="mb-2 border-2 border-slate-400 rounded-md min-h-64">
               <template #front>{{slotprops.item.front}}</template>
               <template #back>{{slotprops.item.back}}</template>
-            </QuizCard>
+            </FlashCard>
           </li>
           <li v-if="!edit && activeView == View.SideBySide" class="w-3/4">
             <div class="flex flex-row justify-center mb-2 space-x-2">
@@ -43,26 +43,34 @@
           </li>
           <li v-if="!edit && activeView == View.Carousel && currIndex == slotprops.i" class="w-1/2 h-full flex flex-col justify-center">
             <div>
-              <QuizCard v-model="carouselCard"  class="mb-2 border-2 border-slate-400 rounded-md min-h-64">
+              <FlashCard v-model="carouselCard"  class="mb-2 border-2 border-slate-400 rounded-md min-h-64">
                 <template #front>{{slotprops.item.front}}</template>
                 <template #back>{{slotprops.item.back}}</template>
-              </QuizCard>
+              </FlashCard>
               <div class="text-center">
                 <button @click="()=>currIndex = 0"><Icon :size="carouselIconSizes" name="ph:caret-double-left-duotone"></Icon></button>
                 <button @click="()=>currIndex=Math.max(currIndex-1,0)"><Icon :size="carouselIconSizes" name="ph:caret-left-duotone"></Icon></button>
               <div class="w-16 inline-block text-center">
-                {{ currIndex+1 }} of {{ slotprops.items.length }}
+                {{ currIndex+1 }} of {{ items.length }}
               </div>
-                <button @click="()=>currIndex = currIndex = Math.min(currIndex+1,slotprops.items.length-1) "><Icon :size="carouselIconSizes" name="ph:caret-right-duotone"></Icon></button>
-                <button @click="()=>currIndex = slotprops.items.length-1"><Icon :size="carouselIconSizes" name="ph:caret-double-right-duotone"></Icon></button>
+                <button @click="()=>currIndex = currIndex = Math.min(currIndex+1,items.length-1) "><Icon :size="carouselIconSizes" name="ph:caret-right-duotone"></Icon></button>
+                <button @click="()=>currIndex = items.length-1"><Icon :size="carouselIconSizes" name="ph:caret-double-right-duotone"></Icon></button>
               </div>
             </div>
           </li>
-          <li v-if="edit" class="w-3/4">
-            <div class="flex flex-row justify-center mb-2 space-x-2">
-              <div class="border-2 border-slate-400 rounded-md min-h-64 flex-1 bg-white" contenteditable="true">{{slotprops.item.front}}</div>
+          <li v-if="edit" class="w-3/4 flex flex-col">
+            <button v-if="slotprops.i === 0" class="bg-blue-200 rounded-md" @click="items = [{front:'first', back:''}, ...items];
+            console.log(items) 
+            "><Icon name="ph:plus-circle-duotone" size="50px"></Icon></button>
+            <div class="flex flex-row justify-center space-x-2">
+              <Editor  v-model="items[slotprops.i].front" class="border-2 border-slate-400 rounded-md min-h-64 flex-1 bg-white" contenteditable="true" @input="(event)=>{
+                // const target = event.target as HTMLInputElement
+                // // items[slotprops.i].front = target.textContent ?? ''
+                // console.log(items[slotprops.i].front)
+              }"></Editor>
               <div class="border-2 border-slate-400 rounded-md min-h-64 flex-1 bg-white" contenteditable="true">{{slotprops.item.back}}</div>
             </div>
+            <button @click="items = items.toSpliced(slotprops.i+1, 0,{front:'booga', back:''})" class="bg-blue-200 rounded-md" ><Icon name="ph:plus-circle-duotone" size="50px"></Icon></button>
           </li>
         </CardList>
       </div>
@@ -82,7 +90,7 @@ enum View{
   Carousel = "Carousel",
 }
 
-const edit = ref(false)
+const edit = ref(true)
 const props = defineProps({
   session: String
 })
@@ -93,6 +101,8 @@ definePageMeta({
 
 const mapKeys: ComputedRef<string[]> = computed(()=>[...viewMap.keys()].map((k)=>k.toString()))
 const layoutIcon = computed(()=>viewMap.get(activeView.value))
+
+const items  = ref<{front: string, back:string}[]>([])
 
 const crumbs = ()=>useNativeRoute().path.split('/').slice(1).map((e,i,arr)=>{
   let path = e
@@ -115,7 +125,6 @@ const viewMap: Map<View, string> = new Map([
 const carouselIconSizes="2em"
 const carouselCard = ref(false)
 
-const items: Ref<{front: String, back:String}[]|null> = ref(null)
 const currIndex = ref(0)
 
 let keyLock = 0
@@ -149,6 +158,19 @@ watch(items, ()=>{
 })
 
 watch(currIndex, ()=>{console.log(currIndex)})
+
+function cursor_position() {
+    var sel = document.getSelection();
+    if(sel == null){
+      return
+    }
+    sel.modify("extend", "backward", "paragraphboundary");
+    var pos = sel.toString().length;
+    if(sel.anchorNode != undefined) sel.collapseToEnd();
+
+    return pos;
+}
+
 </script>
 
 <style>
