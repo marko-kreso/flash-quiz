@@ -1,16 +1,28 @@
+import { useCookie, useNuxtApp, useRequestHeaders } from "nuxt/app"
+import client from "../utils/redis"
 
 const authWhitelist = new Set(['/api/login', '/api/resetPassword', '/api/signup'])
 
 
 // import redisClient from "../utils/redis"
 export default defineEventHandler(async (event) => {
-  console.log(event.path)
+  const path = event.path.split('?')[0]
+  console.log('path')
   const session = getCookie(event, 'session')
 
+  if(path === '/login' && session){
+    const {username} = await client.hGetAll(session)
+    console.log(username)
+    if(!username){
+      deleteCookie(event, 'loggedIn')
+      return
+    }
+    sendRedirect(event, `/users/${username}`)
+  }
   if(event.node.req.method === 'GET'){
     return
   }
-  if(authWhitelist.has(event.path)){
+  if(authWhitelist.has(path)){
     return
   }
 
@@ -20,17 +32,26 @@ export default defineEventHandler(async (event) => {
     })
   }
 
-  // redis get username associated with session
-  const username = "GET FROM REDIS"
+  const csrfHeader = event.headers.get('csrf')
+  const {csrf, username} = await client.hGetAll(session)
+  console.log('verifying csrf', csrf === csrfHeader)
+  if(csrf !== csrfHeader){
+    deleteCookie(event, 'loggedIn')
+    throw createError({
+      statusCode: 401
+    })
+  }
+
   event.context.username = username
   event.context.session = session
+  setCookie(event, 'loggedIn', 'true')
 
-    // if(!session && event.path.startsWith('/api') && !authWhitelist.has(event.path)){
+    // if(!session && path.startsWith('/api') && !authWhitelist.has(path)){
     //     sendRedirect(event, '/login')
     //     return
     // }
 
-    if(event.path.startsWith('/api/item')){
+    if(path.startsWith('/api/item')){
         if(event.node.req.method !== 'GET'){
             const {path}:{path: string} = await readBody(event)
             if(!path){

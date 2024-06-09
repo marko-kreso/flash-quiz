@@ -23,7 +23,7 @@ export default defineEventHandler(async (event) => {
       `
       if(user){
         setResponseStatus(event, 409)
-        throw new Error("409 occured")
+        return
       }
       console.log('hello')
       await sql`
@@ -42,6 +42,5 @@ export default defineEventHandler(async (event) => {
       await sql`INSERT INTO folders (path) VALUES (${username})`
   })
 
-  
-  setResponseStatus(event, 200)
+
 })

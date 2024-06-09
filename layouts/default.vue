@@ -14,7 +14,7 @@
         <div class="flex-1">
           <nav class="h-full flex flex-col bg-white">
             <ul class="flex flex-col flex-1">
-              <NuxtLink  :to="`/login?returnUrl=${encodeURIComponent($route.path.toString())}`"><li  class="flex flex-col justify-center h-12"><IconListElement name="ph:sign-in-duotone" text="Login/Sign up"/></li></NuxtLink>
+              <NuxtLink v-if="!session" :to="`/login?returnUrl=${encodeURIComponent($route.path.toString())}`"><li  class="flex flex-col justify-center h-12"><IconListElement name="ph:sign-in-duotone" text="Login/Sign up"/></li></NuxtLink>
               <!-- <li class="flex flex-row align-center justify-evenly mb-1"><button class="rounded-md bg-blue-400 px-3 py-2">Log in</button> <button class="rounded-md bg-orange-400 px-3 py-2">Sign up</button></li> -->
               <li v-if="session" class="flex flex-col justify-center h-12"><IconListElement name="ph:stack-duotone" text="Collection"/></li>
               <li class="flex flex-col justify-center h-12"><IconListElement name="ph:globe-simple-duotone" text="Explore"/></li>
@@ -23,6 +23,9 @@
               <NuxtLink to="/about"><li class="flex flex-col justify-center h-12"><IconListElement name="ph:question-duotone" text="About"/></li></NuxtLink>
               <NuxtLink to="/profile"><li v-if="session" class="flex flex-col justify-center h-12"><IconListElement name="ph:user-circle-duotone" text="Profile"/></li></NuxtLink>
               <NuxtLink @click="()=>{
+
+                $fetch('/api/logout')
+                
               }"> <li v-if="session" class="flex flex-col justify-center h-12"><IconListElement name="ph:signpost-duotone" text="Logout"/></li></NuxtLink>
             </ul>
           </nav>
@@ -35,7 +38,13 @@
     </main>
 </template>
 <script setup lang="ts">
-const session = useCookie('session')
+import { useLogged } from '~/composables/useLogged';
+
+const session = useCookie('loggedIn')
+console.log('loggedIn', session.value)
+function logOut(){
+  $fetch('/api/logout')
+}
 </script>
 <style>
 </style>

@@ -156,6 +156,8 @@ watch(items, ()=>{
 })
 
 watch(currIndex, ()=>{console.log(currIndex)})
+// const session = useCookie('session')
+// console.log('session', session.value)
 </script>
 
 <style>

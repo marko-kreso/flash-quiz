@@ -11,13 +11,14 @@
           event.preventDefault()
           const target = event.target as HTMLFormElement
 
-          const username=''
-          $router.push(
-            retUrl?.toString() ?? `/users/${username}`
-          )
+          await contactLogin()
+
+          // $router.push(
+          //   retUrl?.toString() ?? `/users/${loginUsername}`
+          // )
         }">
-          <input class="border border-black rounded-md p-1 w-80 " name="username" placeholder="email or username" type="text" required><br>
-          <input class="border border-black rounded-md p-1 w-80 " name="password" placeholder="password" type="password" required><br>
+          <input v-model="loginUsername" class="border border-black rounded-md p-1 w-80 " name="username" placeholder="email or username" type="text" required><br>
+          <input v-model="loginPassword" class="border border-black rounded-md p-1 w-80 " name="password" placeholder="password" type="password" required><br>
           <div class="flex flex-row justify-evenly w-full">
             <button class="px-2 py-1 bg-blue-400 rounded-md text-white">Submit</button> <NuxtLink to="/forgot">forgot password?</NuxtLink> 
           </div>
@@ -31,19 +32,14 @@
           // fetch(event.target.action)
           console.log('start')
 
-          const resp = contactSignup()
+          const resp = await contactSignup()
           console.log(resp)
-
-
-          // $router.push(
-          //   retUrl?.toString() ?? `/users/${signUpUsername}`
-          // )
           
         }">
-          <input v-model.lazy="passwd" :class="'border border-black rounded-md p-1 w-80 '" name="password" placeholder="password" type="password" minlength="8" maxlength="20" required><br>
-          <input id="test" v-model.lazy="confPasswd" @change="event=>{
+          <input v-model.lazy="signUpPassword" :class="'border border-black rounded-md p-1 w-80 '" name="password" placeholder="password" type="password" minlength="8" maxlength="20" required><br>
+          <input id="test" v-model.lazy="confPassword" @change="event=>{
             const target = event.target as HTMLInputElement
-            if(passwd !== confPasswd){
+            if(signUpPassword !== confPassword){
               target.setCustomValidity('Passwords do not match')
               return
             }
@@ -62,11 +58,16 @@
 </template>
 
 <script lang="ts" setup>
+import { useLogged } from '~/composables/useLogged';
 
-  const passwd=ref("")
-  const confPasswd = ref("")
+
+  const signUpPassword=ref("")
+  const confPassword = ref("")
   const signUpUsername = ref("")
   const signUpEmail = ref("")
+
+  const loginUsername = ref("")
+  const loginPassword = ref("")
   // const passMatch:globalThis.Ref<null | boolean> = ref(null)
   // const borderColor = computed(()=>{
   //   if(passMatch === null){
@@ -76,10 +77,11 @@
   // })
   const retUrl = ref(useRoute().query.returnUrl)
 
+  const loggedIn = useCookie('loggedIn')
 
   // watch(passMatch, (newVal)=>{
   //   console.log('first')
-  //   if(!passwd.value.length || !confPasswd.value.length ){
+  //   if(!passwd.value.length || !confPassword.value.length ){
   //     console.log('inside')
   //       // pass.value.setCustomValidity("")
   //     console.log('inside2')
@@ -101,9 +103,31 @@
       body:{
         username: signUpUsername.value,
         email: signUpEmail.value,
-        password: passwd.value
+        password: signUpPassword.value
       },
     })
+  }
+
+  async function contactLogin(): Promise<string>{
+    console.log('before')
+    const body = await $fetch('/api/login',{
+      method: 'POST',
+      body:{
+        type: "local",
+        username: loginUsername.value,
+        password: loginPassword.value,
+        stayLoggedIn: false,
+      },
+    })
+    const csrf: string = body!.csrf
+    if(process.client){
+      localStorage.setItem('csrf', csrf)
+    }
+    useState('csrf', ()=>csrf)
+    loggedIn.value = 'true'
+    console.log(loggedIn.value)
+    console.log('csrf',csrf)
+    return csrf
   }
 
   definePageMeta({
