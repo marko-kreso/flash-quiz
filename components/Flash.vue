@@ -72,8 +72,12 @@
                 // console.log(items[slotprops.i].front)
               }"></Editor>
               <div class="border-2 border-slate-400 rounded-md min-h-64 flex-1 bg-white" contenteditable="true">{{items[slotprops.i].back}}</div>
-              <div class="bg-red-400" @click="
+              <div class="bg-red-400" @click="()=>{
+                if(items.length === 1){
+                  return
+                }
                 items = items.toSpliced(slotprops.i,1) 
+              }
               ">delete</div>
             </div>
             <button @click="items = items.toSpliced(slotprops.i+1, 0,{front:'', back:''})" class="bg-blue-200 rounded-md" ><Icon name="ph:plus-circle-duotone" size="50px"></Icon></button>
