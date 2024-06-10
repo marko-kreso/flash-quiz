@@ -1,11 +1,8 @@
 <template>
-    <div contenteditable="true" @input="(event)=>{
-        model = event.target.innerText
-        console.log(model)
-        curPose = getCaretPosition(event.target)
-        target = event.target
-    }">
-        {{ model }}
+    <div ref="test" id="test" class="inline" contenteditable="true" style="white-space: pre-wrap;" @input="(event)=>{
+        model = event.target.innerHTML
+        // model =model.replace('hello 1', '<b>hello 1</b>')
+    }" v-html="model">
     </div>
 </template>
 
@@ -14,11 +11,12 @@
 <script setup>
 
 const model = defineModel({required: true})
-const curPose = ref(0)
-const target = ref(null)
-watch(model, ()=>{
-    setPos(target, curPose.value)
-})
+// const test = ref(null)
+
+// watch(test,()=>{
+//     console.log(test.value)
+// })
+
 function setPos(el, pos){
     var range = document.createRange()
     var sel = window.getSelection()

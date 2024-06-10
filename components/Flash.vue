@@ -59,18 +59,24 @@
             </div>
           </li>
           <li v-if="edit" class="w-3/4 flex flex-col">
-            <button v-if="slotprops.i === 0" class="bg-blue-200 rounded-md" @click="items.splice(0,0,{front: 'front', back: 'back'});
-            console.log(items) 
+            <button v-if="slotprops.i === 0" class="bg-blue-200 rounded-md" @click="
+            blur()
+            // items = [{front: 'ooga', back: ''}, ...items];
+            items = items.toSpliced(0,0,{front:'',back:''})
             "><Icon name="ph:plus-circle-duotone" size="50px"></Icon></button>
-            <div class="flex flex-row justify-center space-x-2">
-              <Editor  :test="items[slotprops.i].front" v-model="items[slotprops.i].front" class="border-2 border-slate-400 rounded-md min-h-64 flex-1 bg-white" contenteditable="true" @input="(event)=>{
+            {{ slotprops.item }}
+            <div  :key="items.length" class="flex flex-row justify-center space-x-2">
+              <Editor v-model="items[slotprops.i].front" class="border-2 border-slate-400 rounded-md min-h-64 flex-1 bg-white" contenteditable="true" @input="(event)=>{
                 // const target = event.target as HTMLInputElement
                 // // items[slotprops.i].front = target.textContent ?? ''
                 // console.log(items[slotprops.i].front)
               }"></Editor>
               <div class="border-2 border-slate-400 rounded-md min-h-64 flex-1 bg-white" contenteditable="true">{{items[slotprops.i].back}}</div>
+              <div class="bg-red-400" @click="
+                items = items.toSpliced(slotprops.i,1) 
+              ">delete</div>
             </div>
-            <button @click="items = items.toSpliced(slotprops.i+1, 0,{front:'booga', back:''})" class="bg-blue-200 rounded-md" ><Icon name="ph:plus-circle-duotone" size="50px"></Icon></button>
+            <button @click="items = items.toSpliced(slotprops.i+1, 0,{front:'', back:''})" class="bg-blue-200 rounded-md" ><Icon name="ph:plus-circle-duotone" size="50px"></Icon></button>
           </li>
         </CardList>
       </div>
@@ -102,8 +108,11 @@ definePageMeta({
 const mapKeys: ComputedRef<string[]> = computed(()=>[...viewMap.keys()].map((k)=>k.toString()))
 const layoutIcon = computed(()=>viewMap.get(activeView.value))
 
-const items  = ref<{front: string, back:string}[]>([])
-
+const items  = shallowRef<{front: string, back:string}[]>([])
+const blur =()=>{
+  console.log(document.activeElement)
+  document.activeElement.blur()
+}
 const crumbs = ()=>useNativeRoute().path.split('/').slice(1).map((e,i,arr)=>{
   let path = e
   for(let j = i-1; j >= 0; j--){
@@ -130,7 +139,7 @@ const currIndex = ref(0)
 let keyLock = 0
 
 watch(items, ()=>{
-  console.log(items)
+  console.log(items.value)
   window.addEventListener('keydown', (e)=>{
     if(activeView.value !== View.Carousel || keyLock++){
       return
