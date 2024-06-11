@@ -58,9 +58,6 @@
 </template>
 
 <script lang="ts" setup>
-import { useLogged } from '~/composables/useLogged';
-
-
   const signUpPassword=ref("")
   const confPassword = ref("")
   const signUpUsername = ref("")
@@ -76,6 +73,7 @@ import { useLogged } from '~/composables/useLogged';
   //   return passMatch ? 'border-green' : 'border-black'
   // })
   const retUrl = ref(useRoute().query.returnUrl)
+  console.log('url', retUrl.value)
 
   const loggedIn = useCookie('loggedIn')
 

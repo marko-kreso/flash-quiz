@@ -22,10 +22,8 @@
             <ul class="flex flex-col justify-end flex-1">
               <NuxtLink to="/about"><li class="flex flex-col justify-center h-12"><IconListElement name="ph:question-duotone" text="About"/></li></NuxtLink>
               <NuxtLink to="/profile"><li v-if="session" class="flex flex-col justify-center h-12"><IconListElement name="ph:user-circle-duotone" text="Profile"/></li></NuxtLink>
-              <NuxtLink @click="()=>{
-
-                $fetch('/api/logout')
-                
+              <NuxtLink @click="async ()=>{
+                await logOut()
               }"> <li v-if="session" class="flex flex-col justify-center h-12"><IconListElement name="ph:signpost-duotone" text="Logout"/></li></NuxtLink>
             </ul>
           </nav>
@@ -38,12 +36,12 @@
     </main>
 </template>
 <script setup lang="ts">
-import { useLogged } from '~/composables/useLogged';
 
 const session = useCookie('loggedIn')
 console.log('loggedIn', session.value)
-function logOut(){
-  $fetch('/api/logout')
+async function logOut(){
+  await $fetch('/api/logout')
+  refreshCookie('loggedIn')
 }
 </script>
 <style>
