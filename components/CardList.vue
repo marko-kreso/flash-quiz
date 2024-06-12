@@ -26,29 +26,13 @@
   onMounted(()=>{
     setTimeout(()=>{
       items.value=[
-        {front: 'hello 1', back: 'answer1'},
-      {front: 'question 2', back: 'answer 2'},
-       {front: 'question 1', back: 'answer1'},
-       {front: 'question 2', back: 'answer 2'},
-      {front: 'question 2', back: 'answer 2'},
-       {front: 'question 1', back: 'answer1'},
-       {front: 'question 2', back: 'answer 2'},
-      {front: 'question 2', back: 'answer 2'},
-       {front: 'question 1', back: 'answer1'},
-       {front: 'question 2', back: 'answer 2'},
-      {front: 'question 2', back: 'answer 2'},
-       {front: 'question 1', back: 'answer1'},
-       {front: 'question 2', back: 'answer 2'},
-      {front: 'question 2', back: 'answer 2'},
-       {front: 'question 1', back: 'answer1'},
-       {front: 'question 2', back: 'answer 2'},
-      {front: 'question 2', back: 'answer 2'},
-       {front: 'question 1', back: 'answer1'},
-       {front: 'question 2', back: 'answer 2'},
-       {front: 'question 2', back: 'answer 2'},
-      {front: 'question 2', back: 'answer 2'},
-       {front: 'question 1', back: 'answer1'},
-       {front: 'question 2', back: 'answer 2'},
+        {front: {
+          text: '',
+          state: '',
+        }, back:{
+          text: '',
+          state: '',
+        }},
     ]
     console.log("MARKO")
     console.log(items.value)

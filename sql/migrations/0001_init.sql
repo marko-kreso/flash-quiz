@@ -33,6 +33,8 @@ CREATE TABLE IF NOT EXISTS card_sets(
     ,username TEXT REFERENCES users(username) NOT NULL
     ,questions TEXT[] NOT NULL
     ,answers TEXT[] NOT NULL
+    ,questions_state TEXT[] NOT NULL
+    ,answers_state TEXT[] NOT NULL
     ,search TSVECTOR GENERATED ALWAYS AS(
         SETWEIGHT(TO_TSVECTOR('english', name), 'A')
         || SETWEIGHT(TO_TSVECTOR('english', ARRAY_TO_STRING(questions, ' ')), 'B')
