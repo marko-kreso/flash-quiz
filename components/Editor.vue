@@ -1,36 +1,59 @@
 <template>
-    <div ref="test" id="test" class="inline w-32 h-32">
-    </div>
+    <MenuPlugin :items="[
+      {command: toggleMark(schema.marks.strong), dom: icon('B', 'strong')},
+      {command: toggleMark(schema.marks.em), dom: icon('i', 'em')},
+      {command: setBlockType(schema.nodes.paragraph), dom: icon('p', 'paragraph')},
+      heading(1), heading(2), heading(3),
+      {command: wrapIn(schema.nodes.blockquote), dom: icon('>', 'blockquote')}
+    ]" ref="menu" id="test" class="inline w-32 h-32">
+    </MenuPlugin>
 </template>
 
 
 
 <script setup>
 
-import {EditorState} from "prosemirror-state"
+import {EditorState, Plugin} from "prosemirror-state"
 import {EditorView} from "prosemirror-view"
 import {Schema, DOMParser, DOMSerializer} from "prosemirror-model"
 import {schema} from "prosemirror-schema-basic"
 import {exampleSetup} from "prosemirror-example-setup"
+import {toggleMark, setBlockType, wrapIn} from "prosemirror-commands"
 
+function icon(text, name) {
+  let span = document.createElement("span")
+  span.className = "menuicon " + name
+  span.title = name
+  span.textContent = text
+  return span
+}
+
+// Create an icon for a heading at the given level
+function heading(level) {
+  return {
+    command: setBlockType(schema.nodes.heading, {level}),
+    dom: icon("H" + level, "heading")
+  }
+}
 
 const model = defineModel({required: true})
-const test = ref(null)
+const menu = ref(null)
+const  editView = ref(null)
 onMounted(()=>{
-  const view = new EditorView(test.value, {
-    state: model.value.state ? EditorState.fromJSON({
-    schema: schema,
-    plugins: exampleSetup({schema: schema})
-  }, model.value.state) : EditorState.create({schema}),
-    dispatchTransaction(transaction){
-      let newState = view.state.apply(transaction)
-      view.updateState(newState)
-      model.value.state = newState.toJSON()
-      model.value.text = newState.doc.textBetween(0, newState.doc.nodeSize-2, ' ').replaceAll(/\s+/g,' ')
-      console.log(model.value.state)
-    } 
+  // const view = new EditorView(test.value, {
+  //   state: model.value.state ? EditorState.fromJSON({
+  //   schema: schema,
+  //   plugins: exampleSetup({schema: schema})
+  // }, model.value.state) : EditorState.create({schema}),
+  //   dispatchTransaction(transaction){
+  //     let newState = view.state.apply(transaction)
+  //     view.updateState(newState)
+  //     model.value.state = newState.toJSON()
+  //     model.value.text = newState.doc.textBetween(0, newState.doc.nodeSize-2, ' ').replaceAll(/\s+/g,' ')
+  //     console.log(model.value.state)
+  //   } 
 
-  })
+  // })
 
 })
 
