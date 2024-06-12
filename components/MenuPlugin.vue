@@ -12,7 +12,6 @@
     console.log('HELLO')
     menuView.items.forEach(({ command, dom }) => {
       if (dom.contains(e.target)) {
-        console.log(editorView)
         command(editorView!.state, editorView!.dispatch, editorView)
       }
     })
@@ -28,7 +27,8 @@ import { EditorState, Plugin } from "prosemirror-state"
 import {keymap} from "prosemirror-keymap"
 import {baseKeymap} from "prosemirror-commands"
 import {schema} from "prosemirror-schema-basic"
-
+import {undo, redo, history} from "prosemirror-history"
+import {toggleMark, setBlockType, wrapIn} from "prosemirror-commands"
 
 const props = defineProps<
   {
@@ -58,7 +58,7 @@ onMounted(() => {
   editorView = new EditorView(view.value, {
     state: EditorState.create({
       schema: schema,
-      plugins: [keymap(baseKeymap), plugin]
+      plugins: [history(),keymap({"Mod-z":undo, "Mod-y":redo, "Mod-b":toggleMark(schema.marks.strong)}),keymap(baseKeymap), plugin]
     })
   })
 
@@ -74,6 +74,7 @@ class MenuView {
       this.editorView = editorView
       this.dom = dom
       items.forEach(({command,dom})=>{
+        console.log(dom)
         this.dom.appendChild(dom)
       })
       this.update()
@@ -87,7 +88,14 @@ class MenuView {
     update() {
       this.items.forEach(({ command, dom }) => {
         let active = command(this.editorView.state, null, this.editorView.state)
-        dom.style.display = active ? "" : "none"
+        if(command === undo || command === redo){
+          dom.style.fill = active ? "black": "gray"
+        }
+        // if(dom.innerText === "B"){
+        //   dom.style.color = active ? "black": "gray"
+
+        // }
+        // dom.style.display = active ? "" : "none"
       })
     }
   }
