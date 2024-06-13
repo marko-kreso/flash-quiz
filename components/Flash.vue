@@ -66,6 +66,17 @@
             items = items.toSpliced(0,0,emptyCard())
             console.log('items',items)
             "><Icon name="ph:plus-circle-duotone" size="50px"></Icon></button>
+            <div class="p-1 ">
+              <div>
+              <button class="w-5" @click="()=>{
+                if(items.length === 1){
+                  return
+                }
+                items = items.toSpliced(slotprops.i,1) 
+              }
+              "><Icon name="ph:trash" size="2em"></Icon></button>
+              </div>
+              <hr>
             <div  :key="(new Date()).getTime() + Math.floor(Math.random() * 10000).toString()" class="flex flex-col justify-center gap-2 mt-1">
               <Editor v-model="items[slotprops.i].front" class="flex border-2 border-slate-400 rounded-md min-h-64 bg-white" @input="(event)=>{
                 // const target = event.target as HTMLInputElement
@@ -78,13 +89,8 @@
                 // console.log(items[slotprops.i].front)
               }"></Editor>
               <!-- <div class="border-2 border-slate-400 rounded-md min-h-64 flex-1 bg-white" contenteditable="true">{{items[slotprops.i].back}}</div> -->
-              <div class="bg-red-400" @click="()=>{
-                if(items.length === 1){
-                  return
-                }
-                items = items.toSpliced(slotprops.i,1) 
-              }
-              ">delete</div>
+            </div>
+
             </div>
             <button @click="items = items.toSpliced(slotprops.i+1, 0, emptyCard())" class="bg-blue-200 rounded-md" ><Icon name="ph:plus-circle-duotone" size="50px"></Icon></button>
           </li>
