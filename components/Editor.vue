@@ -11,7 +11,8 @@
       // {command: setBlockType(schema.nodes.paragraph), dom: icon('p', 'paragraph')},
       // {command: wrapIn(schema.nodes.blockquote), dom: icon('>', 'blockquote')},
       // heading(1), heading(2), heading(3),
-    ]" ref="menu" class="" >
+    ]" ref="menu" class="" v-model="model">
+
     </MenuPlugin>
 
     </div>
@@ -64,28 +65,7 @@ function heading(level) {
 }
 
 const model = defineModel({required: true})
-const menu = ref(null)
-const  editView = ref(null)
-const items = ref([
-
-])
-onMounted(()=>{
-  // const vier = new EditorView(test.value, {
-  //   state: model.value.state ? EditorState.fromJSON({
-  //   schema: schema,
-  //   plugins: exampleSetup({schema: schema})
-  // }, model.value.state) : EditorState.create({schema}),
-  //   dispatchTransaction(transaction){
-  //     let newState = view.state.apply(transaction)
-  //     view.updateState(newState)
-  //     model.value.state = newState.toJSON()
-  //     model.value.text = newState.doc.textBetween(0, newState.doc.nodeSize-2, ' ').replaceAll(/\s+/g,' ')
-  //     console.log(model.value.state)
-  //   } 
-
-  // })
-
-})
+console.log('model', model.value.text)
 
 
 </script>

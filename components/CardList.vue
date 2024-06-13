@@ -27,8 +27,8 @@
     setTimeout(()=>{
       items.value=[
         {front: {
-          text: '',
-          state: '',
+          text: 'fasdfd',
+          state: '{"doc":{"type":"doc","content":[{"type":"paragraph","content":[{"type":"text","text":"fasdf"}]}]},"selection":{"type":"text","anchor":6,"head":6}}',
         }, back:{
           text: '',
           state: '',

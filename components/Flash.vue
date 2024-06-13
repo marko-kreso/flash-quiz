@@ -61,15 +61,24 @@
           <li v-if="edit" class="w-3/4 flex flex-col">
             <button v-if="slotprops.i === 0" class="bg-blue-200 rounded-md" @click="
             // items = [{front: 'ooga', back: ''}, ...items];
-            items = items.toSpliced(0,0,emptyCard)
+            console.log('CLICK------------')
+            console.log('before items',items)
+            items = items.toSpliced(0,0,emptyCard())
+            console.log('items',items)
             "><Icon name="ph:plus-circle-duotone" size="50px"></Icon></button>
-            <div  :key="items.length" class="flex flex-col justify-center gap-2 mt-1">
+            {{ items.map((e)=>e.front.text) }}
+            <div  :key="(new Date()).getTime() + Math.floor(Math.random() * 10000).toString()" class="flex flex-col justify-center gap-2 mt-1">
               <Editor v-model="items[slotprops.i].front" class="flex border-2 border-slate-400 rounded-md min-h-64 bg-white" @input="(event)=>{
                 // const target = event.target as HTMLInputElement
                 // // items[slotprops.i].front = target.textContent ?? ''
                 // console.log(items[slotprops.i].front)
               }"></Editor>
-              <div class="border-2 border-slate-400 rounded-md min-h-64 flex-1 bg-white" contenteditable="true">{{items[slotprops.i].back}}</div>
+              <Editor v-model="items[slotprops.i].back" class="flex border-2 border-slate-400 rounded-md min-h-64 bg-white" @input="(event)=>{
+                // const target = event.target as HTMLInputElement
+                // // items[slotprops.i].front = target.textContent ?? ''
+                // console.log(items[slotprops.i].front)
+              }"></Editor>
+              <!-- <div class="border-2 border-slate-400 rounded-md min-h-64 flex-1 bg-white" contenteditable="true">{{items[slotprops.i].back}}</div> -->
               <div class="bg-red-400" @click="()=>{
                 if(items.length === 1){
                   return
@@ -78,7 +87,7 @@
               }
               ">delete</div>
             </div>
-            <button @click="items = items.toSpliced(slotprops.i+1, 0, emptyCard)" class="bg-blue-200 rounded-md" ><Icon name="ph:plus-circle-duotone" size="50px"></Icon></button>
+            <button @click="items = items.toSpliced(slotprops.i+1, 0, emptyCard())" class="bg-blue-200 rounded-md" ><Icon name="ph:plus-circle-duotone" size="50px"></Icon></button>
           </li>
         </CardList>
       </div>
@@ -89,7 +98,7 @@
 <script lang="ts" setup>
 import {useRoute as useNativeRoute } from 'vue-router'
 
-const emptyCard = {
+const emptyCard = ()=>{return{
   front:{
     text: '',
     state: '',
@@ -98,7 +107,7 @@ const emptyCard = {
     text: '',
     state: '',
   }
-}
+}}
 
 const path = useNativeRoute().params.path
 
@@ -129,6 +138,9 @@ const items  = shallowRef<{
     text: string,
     state: string,
   }}[]>([])
+  watch(items, ()=>{
+    console.log('items', items.value)
+  })
 // const blur =()=>{
 //   console.log(document.activeElement)
 //   document.activeElement.blur()

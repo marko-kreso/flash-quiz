@@ -2,7 +2,6 @@
   <div class="flex flex-1">
   <div ref="menu" class="menubar flex flex-row items-center gap-2" @mousedown="(e) => {
     e.preventDefault()
-    console.log('HELLO')
     if (editorView === undefined) {
       return
     }
@@ -10,7 +9,6 @@
     if(!menuView){
       return
     }
-    console.log('HELLO')
     menuView.items.forEach(({ command, dom }) => {
       if (dom.contains(e.target)) {
         command(editorView!.state, editorView!.dispatch, editorView)
@@ -35,7 +33,6 @@ import {toggleMark, setBlockType, wrapIn} from "prosemirror-commands"
 
 const props = defineProps<
   {
-    editorView: EditorView,
     items: Array<{ command: any, dom: any }>
   }
 >()
@@ -46,11 +43,10 @@ let editorView: EditorView | undefined = undefined
 let menuView: undefined | MenuView = undefined
 let bold = ref(false)
 let italic = ref(false)
+const model = defineModel<{state:string, text:string}>({required: true})
 
 onMounted(() => {
-  console.log('onMounted', menu.value)
-  setTimeout
-  const plugin = new Plugin({
+  let plugin = new Plugin({
     view(editorView) {
       menuView = new MenuView(props.items, editorView = editorView, menu.value!)
       editorView.dom.parentNode?.insertBefore(menuView.dom, editorView.dom)
@@ -60,14 +56,18 @@ onMounted(() => {
   if(!view.value){
     return
   }
-  editorView = new EditorView(view.value, {
-    state: EditorState.create({
+  let state = EditorState.create({
       schema: schema,
       plugins: [history(),keymap({"Mod-z":undo, "Mod-y":redo, "Mod-b":toggleMark(schema.marks.strong), "Mod-i":toggleMark(schema.marks.em)}),keymap(baseKeymap), plugin]
-    }),
+    })
+  if(model.value.state.length > 0){
+    state.doc = EditorState.fromJSON({schema: schema}, JSON.parse(model.value.state)).doc
+    // editorView.updateState(EditorState.fromJSON({schema: schema}, JSON.parse(model.value.state), ))
+  }
+  editorView = new EditorView(view.value, {
+    state: state,
     dispatchTransaction(tr) {
       let newState =editorView.state.apply(tr) 
-      console.log(newState.storedMarks)
 
       if(newState.storedMarks === null){
         bold.value=(newState.selection.$head.marks().map((m)=>m.type).includes(schema.marks.strong))
@@ -80,10 +80,15 @@ onMounted(() => {
       if(newState.doc.childCount < 20){
         editorView?.updateState(newState)
       }
+      model.value.state = JSON.stringify(newState.toJSON())
+      model.value.text = newState.doc.textBetween(0, newState.doc.nodeSize-2, ' ')
     },
   })
 
 
+})
+onBeforeUnmount(()=>{
+  menuView?.destroy()
 })
 class MenuView {
     items: { command: any, dom: HTMLElement }[]
@@ -95,7 +100,6 @@ class MenuView {
       this.editorView = editorView
       this.dom = dom
       items.forEach(({command,dom})=>{
-        console.log(dom)
         this.dom.appendChild(dom)
       })
       this.update()
@@ -115,7 +119,6 @@ class MenuView {
           dom.style.verticalAlign = "bottom"
         }
         if(dom.innerText === 'B'){
-          console.log('active', dom, active)
           dom.style.backgroundColor = bold.value ? "#eee" : "white"
         }
         if(dom.innerText === "I"){
