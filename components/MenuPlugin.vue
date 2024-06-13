@@ -46,17 +46,6 @@ let editorView: EditorView | undefined = undefined
 let menuView: undefined | MenuView = undefined
 let bold = ref(false)
 
-let command =  toggleMark(schema.marks.strong)
-function toggleMarkWrapper(state: EditorState, dispatch?: (tr: Transaction) => void, view?: EditorView): boolean{
-  bold.value = !bold.value
-  console.log('bold', bold.value)
-  let out =  command(state, dispatch, view)
-  console.log('out',out)
-  if(!out){
-    bold.value = false
-  }
-  return out
-}
 onMounted(() => {
   console.log('onMounted', menu.value)
   setTimeout
@@ -73,7 +62,7 @@ onMounted(() => {
   editorView = new EditorView(view.value, {
     state: EditorState.create({
       schema: schema,
-      plugins: [history(),keymap({"Mod-z":undo, "Mod-y":redo, "Mod-b":toggleMarkWrapper, "Mod-i":toggleMark(schema.marks.em)}),keymap(baseKeymap), plugin]
+      plugins: [history(),keymap({"Mod-z":undo, "Mod-y":redo, "Mod-b":toggleMark(schema.marks.strong), "Mod-i":toggleMark(schema.marks.em)}),keymap(baseKeymap), plugin]
     }),
     dispatchTransaction(tr) {
       let newState =editorView.state.apply(tr) 
