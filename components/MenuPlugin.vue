@@ -45,6 +45,7 @@ const view = ref<HTMLElement | undefined>(undefined)
 let editorView: EditorView | undefined = undefined
 let menuView: undefined | MenuView = undefined
 let bold = ref(false)
+let italic = ref(false)
 
 onMounted(() => {
   console.log('onMounted', menu.value)
@@ -66,8 +67,15 @@ onMounted(() => {
     }),
     dispatchTransaction(tr) {
       let newState =editorView.state.apply(tr) 
-      bold.value=newState.selection.$anchor.marks().map((m)=>m.type).includes(schema.marks.strong) || (newState.storedMarks?.map((m)=>m.type).includes(schema.marks.strong) ?? false)
-      console.log(bold.value)
+      console.log(newState.storedMarks)
+
+      if(newState.storedMarks === null){
+        bold.value=(newState.selection.$head.marks().map((m)=>m.type).includes(schema.marks.strong))
+        italic.value=(newState.selection.$head.marks().map((m)=>m.type).includes(schema.marks.em))
+      }else{
+        bold.value = newState.storedMarks?.map((m)=>m.type).includes(schema.marks.strong)
+        italic.value = newState.storedMarks?.map((m)=>m.type).includes(schema.marks.em)
+      }
 
       if(newState.doc.childCount < 20){
         editorView?.updateState(newState)
@@ -101,14 +109,17 @@ class MenuView {
     update() {
       this.items.forEach(({ command, dom }) => {
         let active = command(this.editorView.state, null, this.editorView.state)
-        console.log(dom, active)
         if(command === undo || command === redo){
           dom.style.fill = active ? "black": "gray"
         }else{
           dom.style.verticalAlign = "bottom"
         }
         if(dom.innerText === 'B'){
+          console.log('active', dom, active)
           dom.style.backgroundColor = bold.value ? "#eee" : "white"
+        }
+        if(dom.innerText === "I"){
+          dom.style.backgroundColor = italic.value ? "#eee" : "white"
         }
         // if(dom.innerText === "B"){
         //   dom.style.color = active ? "black": "gray"
