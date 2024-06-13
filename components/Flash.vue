@@ -63,9 +63,8 @@
             // items = [{front: 'ooga', back: ''}, ...items];
             items = items.toSpliced(0,0,emptyCard)
             "><Icon name="ph:plus-circle-duotone" size="50px"></Icon></button>
-            {{ slotprops.item }}
-            <div  :key="items.length" class="flex flex-row justify-center space-x-2">
-              <Editor v-model="items[slotprops.i].front" class="border-2 border-slate-400 rounded-md min-h-64 flex-1 bg-white" @input="(event)=>{
+            <div  :key="items.length" class="flex flex-col justify-center gap-2 mt-1">
+              <Editor v-model="items[slotprops.i].front" class="flex border-2 border-slate-400 rounded-md min-h-64 bg-white" @input="(event)=>{
                 // const target = event.target as HTMLInputElement
                 // // items[slotprops.i].front = target.textContent ?? ''
                 // console.log(items[slotprops.i].front)
