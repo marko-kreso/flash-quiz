@@ -66,7 +66,6 @@
             items = items.toSpliced(0,0,emptyCard())
             console.log('items',items)
             "><Icon name="ph:plus-circle-duotone" size="50px"></Icon></button>
-            {{ items.map((e)=>e.front.text) }}
             <div  :key="(new Date()).getTime() + Math.floor(Math.random() * 10000).toString()" class="flex flex-col justify-center gap-2 mt-1">
               <Editor v-model="items[slotprops.i].front" class="flex border-2 border-slate-400 rounded-md min-h-64 bg-white" @input="(event)=>{
                 // const target = event.target as HTMLInputElement
