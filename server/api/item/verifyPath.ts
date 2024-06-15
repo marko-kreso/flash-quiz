@@ -8,7 +8,9 @@ export default defineEventHandler(async (event) => {
     path: pathSchema('')
   })
 
+  console.log('before verify')
   const {path} = await getValidatedQuery(event, (query)=>querySchema.parse(query))
+  console.log('in verify', path)
 
   const [{count: cardCount}]:[{count:number}]= await sql`SELECT COUNT(*) FROM card_sets WHERE path = ${path}`
 

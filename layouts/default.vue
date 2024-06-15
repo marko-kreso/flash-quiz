@@ -22,7 +22,7 @@
             <ul class="flex flex-col justify-end flex-1">
               <NuxtLink to="/about"><li class="flex flex-col justify-center h-12"><IconListElement name="ph:question-duotone" text="About"/></li></NuxtLink>
               <NuxtLink to="/profile"><li v-if="session" class="flex flex-col justify-center h-12"><IconListElement name="ph:user-circle-duotone" text="Profile"/></li></NuxtLink>
-              <NuxtLink @click="async ()=>{
+              <NuxtLink  class="hover:cursor-pointer" @click="async ()=>{
                 await logOut()
               }"> <li v-if="session" class="flex flex-col justify-center h-12"><IconListElement name="ph:signpost-duotone" text="Logout"/></li></NuxtLink>
             </ul>
@@ -41,11 +41,10 @@ const session = useCookie('loggedIn')
 console.log('loggedIn', session.value)
 
 const username = useState('username')
-console.log(username.value)
 async function logOut(){
   await $fetch('/api/logout')
   refreshCookie('loggedIn')
-  username.value = ""
+  clearNuxtState('username')
 }
 </script>
 <style>

@@ -19,10 +19,10 @@ export default defineEventHandler(async (event) => {
     }
     sendRedirect(event, `/users/${username}`)
   }
-  if(event.node.req.method === 'GET'){
+  if(authWhitelist.has(path)){
     return
   }
-  if(authWhitelist.has(path)){
+  if(event.node.req.method === 'GET'){
     return
   }
 
@@ -44,6 +44,8 @@ export default defineEventHandler(async (event) => {
 
   event.context.username = username
   event.context.session = session
+  console.log('context')
+  console.log(event.context.username)
   setCookie(event, 'loggedIn', 'true')
 
     // if(!session && path.startsWith('/api') && !authWhitelist.has(path)){

@@ -18,10 +18,15 @@
 </template>
 
 <script lang="ts" setup>
-// const {data, pending, error, refresh} = await useLazyFetch(`/api/cards/verifyPath?path=${path}`)
-const data = ref('')
-const pending = ref(true)
-setTimeout(()=>{data.value='quiz'; pending.value=false}, 1000)
+const path = useRoute().fullPath
+const {data, pending, error, refresh} = await useLazyFetch(`/api/item/verifyPath?path=${path.replace("/users","")}`)
+// setTimeout(()=>{data.value='quiz'; pending.value=false}, 1000)
+watch(data, ()=>{
+  console.log(data.value)
+})
+watch(error, ()=>{
+  console.log(error.value)
+})
 
 definePageMeta({
 layout: false,
