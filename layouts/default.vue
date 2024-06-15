@@ -16,7 +16,7 @@
             <ul class="flex flex-col flex-1">
               <NuxtLink v-if="!session" :to="`/login?returnUrl=${encodeURIComponent($route.path.toString())}`"><li  class="flex flex-col justify-center h-12"><IconListElement name="ph:sign-in-duotone" text="Login/Sign up"/></li></NuxtLink>
               <!-- <li class="flex flex-row align-center justify-evenly mb-1"><button class="rounded-md bg-blue-400 px-3 py-2">Log in</button> <button class="rounded-md bg-orange-400 px-3 py-2">Sign up</button></li> -->
-            <NuxtLink v-if="session" :to="`/users/${username}`"><li class="flex flex-col justify-center h-12"><IconListElement name="ph:stack-duotone" text="Collection"/></li></NuxtLink>
+            <NuxtLink v-if="session" :to="username ? username:'/login'" :external="username ?? false"><li class="flex flex-col justify-center h-12"><IconListElement name="ph:stack-duotone" text="Collection"/></li></NuxtLink>
               <li class="flex flex-col justify-center h-12"><IconListElement name="ph:globe-simple-duotone" text="Explore"/></li>
             </ul>
             <ul class="flex flex-col justify-end flex-1">
