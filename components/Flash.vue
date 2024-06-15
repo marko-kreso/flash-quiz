@@ -66,18 +66,47 @@
             items = items.toSpliced(0,0,emptyCard())
             console.log('items',items)
             "><Icon name="ph:plus-circle-duotone" size="50px"></Icon></button>
-            <div class="p-1 ">
-              <div>
-              <button class="w-5" @click="()=>{
+            <div :key="(new Date()).getTime() + Math.floor(Math.random() * 10000).toString()" class="p-1 ">
+              <div class="flex flex-row gap-1">
+              <button @click="()=>{
                 if(items.length === 1){
                   return
                 }
                 items = items.toSpliced(slotprops.i,1) 
               }
-              "><Icon name="ph:trash" size="2em"></Icon></button>
+              ">
+              <Icon name="ph:trash-duotone" size="2em"></Icon></button>
+              <button @click="()=>{
+                if(slotprops.i === 0){
+                  return
+                }
+                // const tmp = items[slotprops.i-1]
+                // items[slotprops.i-1] = items[slotprops.i]
+                // items[slotprops.i] = tmp
+                items = swap(items, slotprops.i-1, slotprops.i)
+              }
+              "><Icon name="ph:arrow-up-duotone"  size="2em"></Icon></button>
+              <button @click="()=>{
+                if(slotprops.i === items.length-1){
+                  return
+                }
+                items = swap(items, slotprops.i, slotprops.i+1)
+              }
+              "><Icon name="ph:arrow-down-duotone"size="2em"></Icon></button>
+              <input @keypress="(event: InputEvent)=>{
+                if(event.key !== 'Enter'){
+                  return true
+                }
+                if(event.target.value < 1 || event.target.value > items.length){
+                  event.target.value = slotprops.i+1
+                  return true
+                }
+                let i = event.target.value-1
+                items = swap(items, Math.min(slotprops.i, i), Math.max(slotprops.i, i))
+              }" :defaultValue="slotprops.i+1">
               </div>
               <hr>
-            <div  :key="(new Date()).getTime() + Math.floor(Math.random() * 10000).toString()" class="flex flex-col justify-center gap-2 mt-1">
+            <div   class="flex flex-col justify-center gap-2 mt-1">
               <Editor v-model="items[slotprops.i].front" class="flex border-2 border-slate-400 rounded-md min-h-64 bg-white" @input="(event)=>{
                 // const target = event.target as HTMLInputElement
                 // // items[slotprops.i].front = target.textContent ?? ''
@@ -103,7 +132,7 @@
 <script lang="ts" setup>
 import {useRoute as useNativeRoute } from 'vue-router'
 
-const emptyCard = ()=>{return{
+const emptyCard:any = ()=>{return{
   front:{
     text: '',
     state: '',
@@ -130,6 +159,10 @@ const props = defineProps({
 definePageMeta({
   layout: false
 })
+function swap(arr:Array<any>, src:number, dest:number){
+  console.log(src, dest)
+  return [...arr.slice(0,src), arr[dest], arr[src], ...arr.slice(dest+1)]
+}
 
 const mapKeys: ComputedRef<string[]> = computed(()=>[...viewMap.keys()].map((k)=>k.toString()))
 const layoutIcon = computed(()=>viewMap.get(activeView.value))
