@@ -7,12 +7,17 @@ export default defineEventHandler(async (event) => {
     path: pathSchema('')
   })
 
+  console.log('before get query')
   const {path} = await getValidatedQuery(event, (query)=>querySchema.parse(query))
 
-  const output:{children: {path:string, folder:boolean}[]} = {children: []}
+  const output:{base?: string, children: {path:string, folder:boolean}[]} = {children: []}
   await sql`SELECT path FROM folders WHERE
-      ${path} @> path AND nlevel(${path})+1 = nlevel(path)
+      ${path} @> path
   `.forEach(row=>{
+    if(row.path === path){
+      output.base = row.path
+      return
+    }
     output.children.push({
       path: row.path,
       folder: true,
@@ -27,11 +32,12 @@ export default defineEventHandler(async (event) => {
     })
   })
 
-  if(output.children.length === 0){
+  if(!output.base){
     throw createError({
       statusCode: 404
     })
   }
 
-  return output
+  console.log(output)
+  return output.children
 })

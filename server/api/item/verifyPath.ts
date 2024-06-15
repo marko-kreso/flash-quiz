@@ -8,7 +8,7 @@ export default defineEventHandler(async (event) => {
     path: pathSchema('')
   })
 
-  console.log('before verify')
+  console.log('before verify', event.path)
   const {path} = await getValidatedQuery(event, (query)=>querySchema.parse(query))
   console.log('in verify', path)
 

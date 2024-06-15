@@ -7,7 +7,12 @@
 </template>
 
 <script lang="ts" setup>
-  const props = defineProps(['url'])
+  const props = defineProps({
+    url: {
+      type: String,
+      required: true
+    }
+  })
 
   
   const items = ref<any[]>([])
@@ -20,56 +25,67 @@
   //   emit('loaded', error)
   // })
 
-  const emit = defineEmits(['change','loaded'])
+  const emit = defineEmits(['loaded'])
+  const { data, pending, error, refresh, clear } = await useFetch(props.url)
   
+  watch(pending,()=>{
+    console.log('ending', pending)
+    if(pending.value){
+      return
+    }
+    if(error.value){
+      throw error
+    }
+    emit("loaded", data.value)
+  }, {immediate: true})
 
   onMounted(()=>{
-    setTimeout(()=>{
-    //   items.value=[
-    //     {front: 'question 1', back: 'answer1'},
-    //   {front: 'question 2', back: 'answer 2'},
-    //    {front: 'question 1', back: 'answer1'},
-    //    {front: 'question 2', back: 'answer 2'},
-    //   {front: 'question 2', back: 'answer 2'},
-    //    {front: 'question 1', back: 'answer1'},
-    //    {front: 'question 2', back: 'answer 2'},
-    //   {front: 'question 2', back: 'answer 2'},
-    //    {front: 'question 1', back: 'answer1'},
-    //    {front: 'question 2', back: 'answer 2'},
-    //   {front: 'question 2', back: 'answer 2'},
-    //    {front: 'question 1', back: 'answer1'},
-    //    {front: 'question 2', back: 'answer 2'},
-    //   {front: 'question 2', back: 'answer 2'},
-    //    {front: 'question 1', back: 'answer1'},
-    //    {front: 'question 2', back: 'answer 2'},
-    //   {front: 'question 2', back: 'answer 2'},
-    //    {front: 'question 1', back: 'answer1'},
-    //    {front: 'question 2', back: 'answer 2'},
-    //    {front: 'question 2', back: 'answer 2'},
-    //   {front: 'question 2', back: 'answer 2'},
-    //    {front: 'question 1', back: 'answer1'},
-    //    {front: 'question 2', back: 'answer 2'},
+    // setTimeout(()=>{
+    // //   items.value=[
+    // //     {front: 'question 1', back: 'answer1'},
+    // //   {front: 'question 2', back: 'answer 2'},
+    // //    {front: 'question 1', back: 'answer1'},
+    // //    {front: 'question 2', back: 'answer 2'},
+    // //   {front: 'question 2', back: 'answer 2'},
+    // //    {front: 'question 1', back: 'answer1'},
+    // //    {front: 'question 2', back: 'answer 2'},
+    // //   {front: 'question 2', back: 'answer 2'},
+    // //    {front: 'question 1', back: 'answer1'},
+    // //    {front: 'question 2', back: 'answer 2'},
+    // //   {front: 'question 2', back: 'answer 2'},
+    // //    {front: 'question 1', back: 'answer1'},
+    // //    {front: 'question 2', back: 'answer 2'},
+    // //   {front: 'question 2', back: 'answer 2'},
+    // //    {front: 'question 1', back: 'answer1'},
+    // //    {front: 'question 2', back: 'answer 2'},
+    // //   {front: 'question 2', back: 'answer 2'},
+    // //    {front: 'question 1', back: 'answer1'},
+    // //    {front: 'question 2', back: 'answer 2'},
+    // //    {front: 'question 2', back: 'answer 2'},
+    // //   {front: 'question 2', back: 'answer 2'},
+    // //    {front: 'question 1', back: 'answer1'},
+    // //    {front: 'question 2', back: 'answer 2'},
     
+    // // ]
+    // items.value=[
+    //   {
+    //   question: "How old are you?", 
+    //   answers:["correct", "incorrect"],
+    //   correctAnswers:["correct"]
+    //   },
+    //   {
+    //   question: "How old are you?", 
+    //   answers:["correct", "incorrect", "incorrect2"],
+    //   correctAnswers:["correct"]
+    //   },
+    //   {
+    //   question: "How old are you?", 
+    //   answers:["correct", "incorrect", "incorrect2", "correct2"],
+    //   correctAnswers:["correct", "correct2"]
+    //   },
     // ]
-    items.value=[
-      {
-      question: "How old are you?", 
-      answers:["correct", "incorrect"],
-      correctAnswers:["correct"]
-      },
-      {
-      question: "How old are you?", 
-      answers:["correct", "incorrect", "incorrect2"],
-      correctAnswers:["correct"]
-      },
-      {
-      question: "How old are you?", 
-      answers:["correct", "incorrect", "incorrect2", "correct2"],
-      correctAnswers:["correct", "correct2"]
-      },
-    ]
-    emit('loaded', items.value)
-    }, 1000)
+    // emit('loaded', items.value)
+    // }, 1000)
   })
 
 </script>
