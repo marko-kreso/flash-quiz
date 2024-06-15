@@ -10,25 +10,25 @@ export default defineEventHandler(async (event) => {
   console.log('before get query')
   const {path} = await getValidatedQuery(event, (query)=>querySchema.parse(query))
 
-  const output:{base?: string, children: {path:string, folder:boolean}[]} = {children: []}
+  const output:{base?: string, children: {path:string, type:string}[]} = {children: []}
   await sql`SELECT path FROM folders WHERE
       ${path} @> path
   `.forEach(row=>{
     if(row.path === path){
-      output.base = row.path
+      output.base = '/' + row.path.replaceAll('.','/')
       return
     }
     output.children.push({
-      path: row.path,
-      folder: true,
+      path: '/' + row.path.replaceAll('.','/'),
+      type: 'folder',
     })
   })
   await sql`SELECT path FROM card_sets WHERE
       ${path} @> path AND nlevel(${path})+1 = nlevel(path)
   `.forEach(row=>{
     output.children.push({
-      path: row.path,
-      folder: false,
+      path: '/' + row.path.replaceAll('.','/'),
+      type: 'card',
     })
   })
 

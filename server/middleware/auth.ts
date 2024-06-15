@@ -61,7 +61,7 @@ export default defineEventHandler(async (event) => {
                   statusCode: 400
                 })
             }
-            if(!path.startsWith(`/${username}`)){
+            if(!path.startsWith(`/users/${username}`)){
                 throw createError({
                   statusCode: 401
                 })

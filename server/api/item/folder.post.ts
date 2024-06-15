@@ -4,6 +4,7 @@ import sql from '../../utils/db'
 
 export default defineEventHandler(async (event) => {
   const username = event.context.username
+  console.log('STARTING')
 
   const pathValidator = z.object({
     path: pathSchema(username)
@@ -14,8 +15,11 @@ export default defineEventHandler(async (event) => {
   const body: Request = await readValidatedBody(event, body => pathValidator.parse(body))
 
 
+  console.log('after parse')
   let parent = body.path.split('.').slice(-2)[0]
-  const [folderRow]:[{count: number}] = await sql`SELECT COUNT(*) FROM folders where path = ${parent}`
+  console.log(parent)
+  const [folderRow]:[{count: number}] = await sql`SELECT COUNT(*)::int FROM folders where path = ${parent}`
+  console.log(folderRow)
   if(folderRow.count !== 1){
     throw createError({
       statusCode: 404,
@@ -23,7 +27,7 @@ export default defineEventHandler(async (event) => {
     })
   }
 
-  const [{count}]:[{count: number}] = await sql`SELECT COUNT(*) FROM card_sets, folders WHERE card_sets.path = ${body.path} OR folders.path = ${body.path}`
+  const [{count}]:[{count: number}] = await sql`SELECT COUNT(*)::int FROM card_sets, folders WHERE card_sets.path = ${body.path} OR folders.path = ${body.path}`
   if(count !== 0){
       throw createError({
         statusCode: 409

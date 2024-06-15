@@ -7,7 +7,9 @@
           </div>
           <div class="ml-32 flex gap-1 font-bold">
             <BreadCrumbs  class="ml-1" sep=">">
-              <BreadCrumb  v-for="path in crumbs()"class="text-blue-600" :to="`/${path.path}`" :text="path.text"></BreadCrumb>
+              <template v-for="path in crumbs()" #[path.text]>
+                <BreadCrumb  class="text-blue-600" :to="`/${path.path}`" :text="path.text"></BreadCrumb>
+              </template>
             </BreadCrumbs>
           </div>
         </div>
@@ -34,10 +36,10 @@
         </div>
       </template>
       <template #default>
-        <div v-for="dat in model" class="flex flex-col text-2xl">
+        <div v-for="dat in model.map((e)=>({...e, 'name':e.path.split('/').slice(-1)[0]}))" class="flex flex-col text-2xl">
           <div class="flex flex-col justify-center">
-            <NuxtLink class="hover:bg-gray-200" :to="`/users${dat.path}`" :noPrefetch="!dat.isFolder">
-              <div v-if="dat.isFolder"><IconListElement class="align-bottom flex items-center" name="ph:folder-simple-duotone" :size="iconSize" :text="dat.name"></IconListElement></div>
+            <NuxtLink class="hover:bg-gray-200" :to="`/users${dat.path}`" :prefetch="true" external>
+              <div v-if="dat.type === 'folder'"><IconListElement class="align-bottom flex items-center" name="ph:folder-simple-duotone" :size="iconSize" :text="dat.name"></IconListElement></div>
               <div v-else><IconListElement class="align-bottom flex items-center" name="ph:cards-duotone" :size="iconSize" :text="dat.name"></IconListElement></div>
             </NuxtLink>
           </div>
@@ -46,7 +48,18 @@
             <div ref="textModal" class="bg-white p-16 flex flex-col justify-center items-center gap-3 text-lg rounded-md">
               New folder name:
               <input ref="folderInput" v-model="folderInputText" class="border border-black" pattern="[A-Za-z0-9 ]" autofocus requried title="Folder name cannot contain special characters"/>
-              <button class="bg-blue-600 rounded-md text-white p-2">Submit</button>
+              <button class="bg-blue-600 rounded-md text-white p-2" @click="async ()=>{
+                try{
+
+                 await createFolder()
+                  activeNewFolder = false  
+                  folderInputText = ''
+
+                }catch(err){
+                  console.log(err)
+                }
+              }
+              ">Submit</button>
             </div>
         </div>
       </template>
@@ -63,7 +76,7 @@ const textModal = ref<HTMLElement | undefined>(undefined)
 const username = useState('username', ()=>'')
 const model = defineModel<{
   name: string,
-  isFolder: boolean,
+  type: string,
   path: string
 }[]>({required: true})
 console.log('model', model.value)
@@ -84,7 +97,16 @@ const iconSize = "2rem"
 
 onClickOutside(textModal, ()=>{
   activeNewFolder.value = false  
+  folderInputText.value = ""
 })
+function createFolder(){
+  return $api('/api/item/folder', {
+    method: 'POST',
+    body: {
+      path: `${path.path}/${folderInputText.value}`
+    }
+  })
+}
 </script>
 
 <style>

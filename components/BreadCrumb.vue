@@ -1,5 +1,5 @@
 <template>
-   <NuxtLink :to="props.to">{{ props.text }}</NuxtLink> 
+   <NuxtLink external :to="props.to">{{ props.text }}</NuxtLink> 
 </template>
 
 <script lang="ts" setup>

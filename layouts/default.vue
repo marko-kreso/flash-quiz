@@ -21,7 +21,7 @@
             </ul>
             <ul class="flex flex-col justify-end flex-1">
               <NuxtLink to="/about"><li class="flex flex-col justify-center h-12"><IconListElement name="ph:question-duotone" text="About"/></li></NuxtLink>
-              <NuxtLink to="/profile"><li v-if="session" class="flex flex-col justify-center h-12"><IconListElement name="ph:user-circle-duotone" text="Profile"/></li></NuxtLink>
+              <!-- <NuxtLink to="/profile"><li v-if="session" class="flex flex-col justify-center h-12"><IconListElement name="ph:user-circle-duotone" text="Profile"/></li></NuxtLink> -->
               <NuxtLink  class="hover:cursor-pointer" @click="async ()=>{
                 await logOut()
               }"> <li v-if="session" class="flex flex-col justify-center h-12"><IconListElement name="ph:signpost-duotone" text="Logout"/></li></NuxtLink>
