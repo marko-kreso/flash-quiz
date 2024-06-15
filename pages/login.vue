@@ -12,10 +12,12 @@
           const target = event.target as HTMLFormElement
 
           await contactLogin()
+          console.log('pushing')
+          useState('username', ()=>loginUsername)
 
-          // $router.push(
-          //   retUrl?.toString() ?? `/users/${loginUsername}`
-          // )
+          $router.push(
+            retUrl?.toString() ?? `/users/${loginUsername}`
+          )
         }">
           <input v-model="loginUsername" class="border border-black rounded-md p-1 w-80 " name="username" placeholder="email or username" type="text" required><br>
           <input v-model="loginPassword" class="border border-black rounded-md p-1 w-80 " name="password" placeholder="password" type="password" required><br>
@@ -123,8 +125,6 @@
     }
     useState('csrf', ()=>csrf)
     loggedIn.value = 'true'
-    console.log(loggedIn.value)
-    console.log('csrf',csrf)
     return csrf
   }
 
