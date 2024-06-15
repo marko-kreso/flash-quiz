@@ -15,9 +15,9 @@ export default defineEventHandler(async (event) => {
   const body: Request = await readValidatedBody(event, body => pathValidator.parse(body))
 
 
-  console.log('after parse')
-  let parent = body.path.split('.').slice(-2)[0]
-  console.log(parent)
+  console.log('after parse', body)
+  let parent = body.path.split('.').slice(0,-2)[0]
+  console.log('parent', parent)
   const [folderRow]:[{count: number}] = await sql`SELECT COUNT(*)::int FROM folders where path = ${parent}`
   console.log(folderRow)
   if(folderRow.count !== 1){
