@@ -16,7 +16,7 @@ export default defineEventHandler(async (event) => {
 
 
   console.log('after parse', body)
-  let parent = body.path.split('.').slice(0,-2)[0]
+  let parent = body.path.split('.').slice(0,-j)[0]
   console.log('parent', parent)
   const [folderRow]:[{count: number}] = await sql`SELECT COUNT(*)::int FROM folders where path = ${parent}`
   console.log(folderRow)

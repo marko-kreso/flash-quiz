@@ -11,9 +11,13 @@ export default defineEventHandler(async (event) => {
   const {path} = await getValidatedQuery(event, (query)=>querySchema.parse(query))
 
   const output:{base?: string, children: {path:string, type:string}[]} = {children: []}
+  // console.log(sql`SELECT path FROM folders WHERE
+  //     ${path} @> path AND nlevel(${path})+1 = nlevel(path)
+  // `.raw())
   await sql`SELECT path FROM folders WHERE
-      ${path} @> path
+      ${path} @> path AND nlevel(${path})+1 = nlevel(path) OR path=${path}
   `.forEach(row=>{
+    console.log('row', row)
     if(row.path === path){
       output.base = '/' + row.path.replaceAll('.','/')
       return

@@ -1,5 +1,5 @@
 <template>
-  <div v-if="pending || !loaded">
+  <div v-if="pending">
     <NuxtLayout name="default">
       <template #header>
         <div class="flex flex-1 flex-row text-2xl items-center">
@@ -21,14 +21,14 @@
     </NuxtLayout>
   </div>
   <div v-if="data==='folder'">
-    <Fetch @loaded="(loadedItems: any)=>{
+    <Folder></Folder>
+    <!-- <Fetch @loaded="(loadedItems: any)=>{
       console.log('loaded', loadedItems.length)
       loaded = true
       items = loadedItems
 
-    }":url="`/api/item/folder?path=${path}`">
-      <Folder v-if="loaded" v-model="items"></Folder>
-    </Fetch>
+    }":url="`/api/item/folder?path=${path}`"> -->
+    <!-- </Fetch> -->
   </div>
   <div v-else-if="data==='card'">
     <Flash></Flash>

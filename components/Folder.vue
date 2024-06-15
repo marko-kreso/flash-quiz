@@ -7,7 +7,7 @@
           </div>
           <div class="ml-32 flex gap-1 font-bold">
             <BreadCrumbs  class="ml-1" sep=">">
-              <template v-for="path in crumbs()" #[path.text]>
+              <template v-for="path in crumbs().slice(1)" #[path.text]>
                 <BreadCrumb  class="text-blue-600" :to="`/${path.path}`" :text="path.text"></BreadCrumb>
               </template>
             </BreadCrumbs>
@@ -35,10 +35,10 @@
           </button>
         </div>
       </template>
-      <template #default>
-        <div v-for="dat in model.map((e)=>({...e, 'name':e.path.split('/').slice(-1)[0]}))" class="flex flex-col text-2xl">
+      <template #default v-if="!pending">
+        <div v-for="dat in data?.map((e)=>({...e, 'name':e.path.split('/').slice(-1)[0]})) ?? []" class="flex flex-col text-2xl">
           <div class="flex flex-col justify-center">
-            <NuxtLink class="hover:bg-gray-200" :to="`/users${dat.path}`" :prefetch="true" external>
+            <NuxtLink class="hover:bg-gray-200" :to="`/users${dat.path}`" :prefetch="true">
               <div v-if="dat.type === 'folder'"><IconListElement class="align-bottom flex items-center" name="ph:folder-simple-duotone" :size="iconSize" :text="dat.name"></IconListElement></div>
               <div v-else><IconListElement class="align-bottom flex items-center" name="ph:cards-duotone" :size="iconSize" :text="dat.name"></IconListElement></div>
             </NuxtLink>
@@ -54,6 +54,7 @@
                  await createFolder()
                   activeNewFolder = false  
                   folderInputText = ''
+                  refresh()
 
                 }catch(err){
                   console.log(err)
@@ -74,12 +75,6 @@ const folderInput = ref<HTMLElement | undefined>(undefined)
 const folderInputText = ref("")
 const textModal = ref<HTMLElement | undefined>(undefined)
 const username = useState('username', ()=>'')
-const model = defineModel<{
-  name: string,
-  type: string,
-  path: string
-}[]>({required: true})
-console.log('model', model.value)
 
 const activeNewFolder=ref(false)
 const path = useNativeRoute()
@@ -107,6 +102,11 @@ function createFolder(){
     }
   })
 }
+const { data, pending, error, refresh, clear } = await useFetch(`/api/item/folder?path=${path.path}`)
+console.log('pending', pending.value)
+watch(data,()=>{
+  console.log(data)
+},{immediate: true})
 </script>
 
 <style>

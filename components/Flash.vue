@@ -8,7 +8,7 @@
           
           <div class="ml-32 flex gap-1 font-bold">
             <BreadCrumbs  class="ml-1" sep=">">
-              <BreadCrumb  v-for="path in crumbs()"class="text-blue-600" :to="`/${path.path}`" :text="path.text"></BreadCrumb>
+              <BreadCrumb  v-for="path in crumbs().slice(1)"class="text-blue-600" :to="`/${path.path}`" :text="path.text"></BreadCrumb>
             </BreadCrumbs>
           </div>
         </div>
