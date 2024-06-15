@@ -12,16 +12,17 @@
           </div>
         </div>
         <div class="flex flex-1 flex-row justify-end items-center">
-            <button :class="['border', 'border-black', 'p-2', 'mr-3', 'rounded-md']">
+            <button v-if="isOwner" @click="
+            ":class="['border', 'border-black', 'p-2', 'mr-3', 'rounded-md']">
               <IconListElement name="ph:plus" text="Folder" />
             </button>
-            <button :class="['border', 'border-black', 'p-2', 'rounded-md', 'mr-3']">
+            <button v-if="isOwner" :class="['border', 'border-black', 'p-2', 'rounded-md', 'mr-3']">
               <IconListElement name="ph:plus" text="Quiz" />
             </button>
           <button :class="['border', 'border-black', 'p-2', 'mr-3', 'rounded-md']">
             <IconListElement name="ph:copy-simple-duotone" text="Clone" />
           </button>
-          <button :class="['border', 'border-black', 'p-2', 'mr-3', 'rounded-md']">
+          <button v-if="isOwner" :class="['border', 'border-black', 'p-2', 'mr-3', 'rounded-md']">
             <IconListElement name="ph:trash-duotone" text="Delete" />
           </button>
         </div>
@@ -42,11 +43,15 @@
 <script lang="ts" setup>
 import {useRoute as useNativeRoute } from 'vue-router'
 
+const username = useState('username', ()=>'')
+
 const props = defineProps({
   session: String
 })
 
-const path = useNativeRoute().params.path
+const path = useNativeRoute()
+console.log('path', useNativeRoute().path)
+const isOwner = computed(()=>useNativeRoute().path.startsWith(`/users/${username.value}`))
 const crumbs = ()=>useNativeRoute().path.split('/').slice(1).map((e,i,arr)=>{
   let path = e
   for(let j = i-1; j >= 0; j--){
