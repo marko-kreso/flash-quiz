@@ -1,40 +1,55 @@
 import sql, { PasswordChangeRequest } from "../utils/db"
-import * as argon2 from 'argon2'
 
 import generateRandomValue from "../utils/tools"
 
-export default defineEventHandler(async (event) => {
-  const {id, token, newPass}: {id:string, token:string, newPass:string} = getQuery(event)
+import nodemailer from "nodemailer"
 
-  if(!id){
+const transporter = nodemailer.createTransport({
+  host: "smtp.gmail.com",
+  port: 465,
+  secure: true,
+  auth: {
+    type: "OAuth2",
+    user: process.env.EMAIL,
+    clientId: process.env.GMAIL_CLIENT_ID,
+    clientSecret: process.env.GMAIL_CLIENT_SECRET,
+  },
+});
+
+
+export default defineEventHandler(async (event) => {
+  const {userId}: {userId:string} = getQuery(event)
+
+  if(!userId){
     setResponseStatus(event, 400)
     return
   }
-  const [passwdReset]: [PasswordChangeRequest?] = await sql`
-    SELECT * FROM password_change_request WHERE
-      id = ${id} 
-      AND token = sha256(${token} || salt)
-      AND (now() - created_on) < '10 min'::interval;
-    `
 
-    if(!passwdReset){
-      setResponseStatus(event, 404)
-      return
-    }
-    const newPassHash = await argon2.hash(newPass, {
-      memoryCost: 2 ** 10 * 19, // 19 Mib
-      parallelism: 1,
-      timeCost: 2,
-    })
+  const [user]: [User?] = await sql`
+    SELECT * FROM users WHERE email = ${userId} OR username = ${userId};
+  `
+  if(!user){
+    setResponseStatus(event, 404)
+    return
+  }
 
-    const rows = await sql`
-      UPDATE passwords SET password = ${newPassHash}
-        WHERE username = ${passwdReset.username};
-    `
-    if(rows.count != 1){
-      setResponseStatus(event, 500)
-      throw new Error('Could not update password')
-    }
+  const token = await generateRandomValue(8)
+  const salt = await generateRandomValue(8)
 
-    setResponseStatus(event, 200)
+  const {count}:{count: Number} = await sql`
+    INSERT INTO password_change_request (
+      token, salt, username
+    ) VALUES(sha256(${token} || ${salt}), ${salt}, ${user.username})
+  `
+  if(count != 1){
+    throw Error('Cannot create request row')
+  }
+
+  await transporter.sendMail({
+    from: process.env.EMAIL,
+    to: user.email,
+    subject: "Giga Quiz Password Reset",
+    text: `Password Reset:\nhttps://localhost:3000/resetPassword?token=${token}`,
+  });
+
 })

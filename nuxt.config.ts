@@ -2,12 +2,11 @@
 export default defineNuxtConfig({
   devtools: { enabled: false },
   modules: ["@nuxtjs/tailwindcss", "nuxt-icon", "nuxt-security"],
+  devServer:{
+    port: +(process.env.PORT!)
+  },
   tailwindcss: {
     exposeConfig: true,
-  },
-  runtimeConfig:{
-    redis: process.env,
-    postgres: process.env.POSTGRES_CONNECTION,
   },
   nitro: {
     esbuild: {

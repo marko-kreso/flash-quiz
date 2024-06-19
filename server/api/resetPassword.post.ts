@@ -1,37 +1,46 @@
-import sql, {User} from "../utils/db"
-import generateRandomValue from "../utils/tools"
+import sql from "../utils/db"
+import * as argon2 from 'argon2'
+
+import { z } from "zod"
 
 export default defineEventHandler(async (event) => {
-  const {userId}: {userId:string} = getQuery(event)
-  if(!userId){
+
+  const resetPassReq = z.object({
+    token: z.string(),
+    password: z.string(),
+  })
+
+
+  type signupRequest = z.infer<typeof resetPassReq>
+
+
+  const body: signupRequest = await readValidatedBody(event, body=>resetPassReq.parse(body))
+  const {password, token} = body
+
+  const [passwdReset]: [PasswordChangeRequest?] = await sql`
+    SELECT * FROM password_change_request WHERE
+      token = sha256(${token} || salt)
+      AND (now() - created_on) < '10 min'::interval;
+    `
+  if(!passwdReset){
     setResponseStatus(event, 400)
-    return
-  }
+    throw new Error('Reset request expired')
+  } 
 
-  const [user]: [User?] = await sql`
-    SELECT * FROM users WHERE email = ${userId} OR username = ${userId};
+  const newPassHash = await argon2.hash(password, {
+    memoryCost: 2 ** 10 * 19, // 19 Mib
+    parallelism: 1,
+    timeCost: 2,
+  })
+
+  const {count} = await sql`
+    UPDATE passwords SET password = ${newPassHash}
+      WHERE username = ${passwdReset.username};
   `
 
-  if(!user){
-    setResponseStatus(event, 404)
-    return
-  }
-
-
-  const id = await generateRandomValue(8)
-  const token = await generateRandomValue(8)
-  const salt = await generateRandomValue(8)
-  
-  const {count}:{count:Number} = await sql`
-    INSERT INTO password_change_request (
-      id, token, salt, username
-    ) VALUES(${id}, sha256(${token} || ${salt}), ${salt}, ${user.username});
-  `
   if(count != 1){
-    setResponseStatus(event, 500)
-    throw new Error('Unexpected number of rows inserted')
+    throw new Error('Could not update password')
   }
+  
 
-  // TODO: ADD EMAIL EVENT
-  setResponseStatus(event, 400)  
 })

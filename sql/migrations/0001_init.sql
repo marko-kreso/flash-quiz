@@ -57,20 +57,17 @@ CREATE INDEX card_text_gist_idx ON card_sets USING GIN (search);
 
 CREATE TABLE IF NOT EXISTS user_favorites(
     username TEXT REFERENCES users(username) ON DELETE CASCADE NOT NULL
-    ,set_user TEXT NOT NULL REFERENCES users(username)
     ,path LTREE NOT NULL REFERENCES card_sets(path) 
-    ,PRIMARY KEY(username, set_user, path)
+    ,PRIMARY KEY(username, path)
 );
 
 CREATE INDEX IF NOT EXISTS favorite_idx ON user_favorites(set_user, path);
 
 CREATE TABLE IF NOT EXISTS password_change_requests(
-    id TEXT
-    ,token Text UNIQUE NOT NULL
+    token Text PRIMARY KEY
     ,username TEXT REFERENCES users(username) ON DELETE CASCADE NOT NULL 
     ,salt TEXT NOT NULL
     ,created_on TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL
-    ,PRIMARY KEY(id) 
 );
 
 -- +migrate Down
